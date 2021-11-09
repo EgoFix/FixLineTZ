@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="350.0" prefWidth="350.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="allVse.Controller">
+   <center>
+      <Pane prefHeight="283.0" prefWidth="350.0" style="-fx-background-color: #5476bf;" BorderPane.alignment="CENTER">
+         <children>
+            <Pane layoutY="14.0" prefHeight="69.0" prefWidth="350.0">
+               <children>
+                  <Button fx:id="buttonReview1" layoutX="251.0" layoutY="35.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="78.0" style="-fx-background-radius: 8;" text="Обзор" />
+                  <Label layoutX="15.0" layoutY="6.0" prefHeight="17.0" prefWidth="227.0" text="Укажите путь к PDF-файлу:" textFill="WHITE" />
+                  <TextField fx:id="textReview1" layoutX="14.0" layoutY="35.0" prefHeight="25.0" prefWidth="233.0" />
+               </children>
+            </Pane>
+            <Pane layoutY="83.0" prefHeight="69.0" prefWidth="350.0">
+               <children>
+                  <Button fx:id="buttonReview2" layoutX="251.0" layoutY="35.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="78.0" style="-fx-background-radius: 8;" text="Обзор" />
+                  <Label layoutX="15.0" layoutY="6.0" prefHeight="17.0" prefWidth="227.0" text="Укажите путь к словарю:" textFill="WHITE" />
+                  <TextField fx:id="textReview2" layoutX="15.0" layoutY="35.0" prefHeight="25.0" prefWidth="233.0" />
+               </children>
+            </Pane>
+            <Pane layoutY="152.0" prefHeight="69.0" prefWidth="350.0">
+               <children>
+                  <Button fx:id="buttonReview3" layoutX="251.0" layoutY="35.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="78.0" style="-fx-background-radius: 8;" text="Обзор" />
+                  <Label layoutX="15.0" layoutY="6.0" prefHeight="17.0" prefWidth="227.0" text="Укажите путь к итоговой таблице:" textFill="WHITE" />
+                  <TextField fx:id="textReview3" layoutX="15.0" layoutY="35.0" prefHeight="25.0" prefWidth="233.0" />
+               </children>
+            </Pane>
+            <Button fx:id="buttonStart" layoutX="92.0" layoutY="239.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="78.0" style="-fx-background-radius: 8;" text="Начать" />
+            <Button fx:id="buttonClose" layoutX="180.0" layoutY="239.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="78.0" style="-fx-background-radius: 8;" text="Выход" />
+         </children>
+      </Pane>
+   </center>
+   <top>
+      <Pane prefHeight="50.0" prefWidth="350.0" style="-fx-background-color: #284073;" BorderPane.alignment="CENTER">
+         <children>
+            <Label layoutX="19.0" layoutY="12.0" text="Автоматический подсчет трудозатрат" textFill="WHITE">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+   </top>
+   <bottom>
+      <Pane prefHeight="20.0" prefWidth="350.0" style="-fx-background-color: #284073;" BorderPane.alignment="CENTER" />
+   </bottom>
+</BorderPane>

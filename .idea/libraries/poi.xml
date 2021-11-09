@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="poi">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/JavaLibs/poi-bin-5.1.0/lib" />
+      <root url="file://$PROJECT_DIR$/JavaLibs/poi-bin-5.1.0" />
+      <root url="file://$PROJECT_DIR$/JavaLibs/poi-bin-5.1.0/ooxml-lib" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+    <jarDirectory url="file://$PROJECT_DIR$/JavaLibs/poi-bin-5.1.0" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/JavaLibs/poi-bin-5.1.0/lib" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/JavaLibs/poi-bin-5.1.0/ooxml-lib" recursive="false" />
+  </library>
+</component>
