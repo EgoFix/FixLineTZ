@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -207,17 +208,12 @@ public class DocumentPDF {
             }
             valueWR = 0;
         }
-        ArrayList<String> dictToDelete = new ArrayList<String>(); // словарь для удаления лишних вхождений в основном массиве
-        for (int rowElem = 1; rowElem < rowElementsToClining.size(); rowElem++) {
-            if (rowElementsToClining.get(rowElem).contains(rowElementsToClining.get(rowElem - 1))) { //получаем первый элемент и сверяем с 0 и тд
-                dictToDelete.add(rowElementsToClining.get(rowElem)); //если элемент присутсвует, то его добавляем в чистый массив
-            }
-        }
-//        dictToDelete.add("крыть");
-        deleteDuplicate(rowElementsToClining);
-//        rowElementsToClining.removeAll(dictToDelete);
+
+        deleteDuplicate(rowElementsToClining); //вычищаем повторяющиеся элементы
+        Collections.sort(rowElementsToClining); //сортируем в алфавитном порядке
+        deleteContains(rowElementsToClining); //вычищаем элементы, которые содержат повторяющиеся элементы
         System.out.println("rowElementsToClining:\n" + rowElementsToClining);
-        System.out.println("eElementsToClining:\n" + dictToDelete);
+
 /*
          // здесь хуйня какая-то произошла
         // выводим в EXCEL
@@ -248,14 +244,23 @@ public class DocumentPDF {
     public void deleteDuplicate(ArrayList<String> myArray) {
         for (int i = 0; i < myArray.size() - 1; i++) {
             for (int j = i + 1; j < myArray.size(); j++) {
-                if (myArray.get(i) == myArray.get(j)) {
-//                    myArray = ArrayUtils.remove(myArray, j);
+                if (myArray.get(i).contains(myArray.get(j))) {
                     myArray.remove(j);
                 }
             }
         }
     }
 
+
+    public void deleteContains(ArrayList<String> myArray) {
+        for (int i = 0; i < myArray.size() - 1; i++) {
+            for (int j = i + 1; j < myArray.size(); j++) {
+                if (myArray.get(j).contains(myArray.get(i))) {
+                    myArray.remove(j);
+                }
+            }
+        }
+    }
 
 
 //конец класса DocumentPDF
