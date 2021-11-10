@@ -20,7 +20,6 @@ import org.apache.pdfbox.io.RandomAccessFile;
 import org.apache.pdfbox.pdfparser.PDFParser;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
-//import org.apache.commons.lang3.ArrayUtils;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -165,6 +164,7 @@ public class DocumentPDF {
             k = 0;
         }
         int n = 0;
+
         // выводим в консоль
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
@@ -182,26 +182,10 @@ public class DocumentPDF {
             NamedNodeMap attributes = DocItem.getAttributes();
             nameWordR = attributes.getNamedItem("name").getNodeValue();
             valueWordR = attributes.getNamedItem("value").getNodeValue();
-            Pattern p = Pattern.compile("(?i).*?\\b" + nameWordR + "*№\\b.*?");
-            for (j = countLast + 1; j < count; j++) {
-                str = PDFList.get(j);
-                Matcher m = p.matcher(str);
-                if (m.find()) {
-                    valueWR = Integer.parseInt(valueWordR);
-                    System.out.println(nameWordR + "--" + j + "--" + valueWordR + "--" + p + "--" + str);
-                    rowElementsToClining.add(str);
-                }
-            }
-            p = Pattern.compile("(?i).*?\\b" + nameWordR + ".№\\b.*?");
-            for (j = countLast + 1; j < count; j++) {
-                str = PDFList.get(j);
-                Matcher m = p.matcher(str);
-                if (m.find()) {
-                    valueWR = Integer.parseInt(valueWordR);
-                    System.out.println(nameWordR + "--" + j + "--" + valueWordR + "--" + p + "--" + str);
-                    rowElementsToClining.add(str);
-                }
-            }
+            makeRowElementsToClining(PDFList,rowElementsToClining,valueWR,nameWordR,valueWordR,"(?i).*?\\b" + nameWordR + "*№\\b.*?");
+
+            makeRowElementsToClining(PDFList,rowElementsToClining,valueWR,nameWordR,valueWordR,"(?i).*?\\b" + nameWordR + ".№\\b.*?");
+
             if (!(valueWR == 0)) {
                 NumDIC.add(valueWR);
                 n++;
@@ -209,10 +193,29 @@ public class DocumentPDF {
             valueWR = 0;
         }
 
+        System.out.println("-----------------------------------------------------------------------");
+        for (i = 0; i < docElemNodes.getLength(); i++) {
+            Node DocItem = docElemNodes.item(i);
+            NamedNodeMap attributes = DocItem.getAttributes();
+            nameWordR = attributes.getNamedItem("name").getNodeValue();
+            valueWordR = attributes.getNamedItem("value").getNodeValue();
+            System.out.println(nameWordR);
+            Pattern p = Pattern.compile(nameWordR);
+            System.out.println(p);
+            for (j = countLast + 1; j < count; j++) {
+                str = rowElementsToClining.get(j); //получаем строку из файла
+                Matcher m = p.matcher(str); //сопоставляем с паттерном
+                if (m.find()) {
+                    valueWR = Integer.parseInt(valueWordR); //переводим номер типа элемента в int
+                    System.out.println(nameWordR + "--" + j + "--" + valueWordR + "--" + p + "--" + str);
+                }
+            }
+        }
         deleteDuplicate(rowElementsToClining); //вычищаем повторяющиеся элементы
         Collections.sort(rowElementsToClining); //сортируем в алфавитном порядке
         deleteContains(rowElementsToClining); //вычищаем элементы, которые содержат повторяющиеся элементы
         System.out.println("rowElementsToClining:\n" + rowElementsToClining);
+        // заменяем элементы в соответствии с их типом в словаре
 
 /*
          // здесь хуйня какая-то произошла
@@ -258,6 +261,25 @@ public class DocumentPDF {
                 if (myArray.get(j).contains(myArray.get(i))) {
                     myArray.remove(j);
                 }
+            }
+        }
+    }
+
+
+    public void makeRowElementsToClining(ArrayList<String> PDFList,
+                                         ArrayList<String> myArray,
+                                         int valueWR,
+                                         String nameWordR,
+                                         String valueWordR,
+                                         String pattern){
+        Pattern p = Pattern.compile(pattern);
+        for (int j = countLast + 1; j < count; j++) {
+            String str = PDFList.get(j);//получаем строку из файла
+            Matcher m = p.matcher(str);//сопоставляем с паттерном
+            if (m.find()) {
+                valueWR = Integer.parseInt(valueWordR); //переводим номер типа элемента в int
+                System.out.println(nameWordR + "--" + j + "--" + valueWordR + "--" + p + "--" + str);
+                myArray.add(str); // добавляем элементы в массив по паттерну
             }
         }
     }
