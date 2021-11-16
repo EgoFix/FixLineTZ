@@ -1,10 +1,7 @@
 package com.example.fixlinetz;
 
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
@@ -14,6 +11,8 @@ import java.util.regex.Pattern;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamReader;
 
 import org.apache.pdfbox.cos.COSDocument;
 import org.apache.pdfbox.io.RandomAccessFile;
@@ -21,6 +20,7 @@ import org.apache.pdfbox.pdfparser.PDFParser;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 
+import org.apache.poi.xddf.usermodel.chart.XDDFManualLayout;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -167,25 +167,27 @@ public class DocumentPDF {
 
         // выводим в консоль
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = factory.newDocumentBuilder();
-        Document document = builder.parse(new File("dictionary.xml")); // словарь
-        Element docElem = document.getDocumentElement(); // заполняем из словаря
-        NodeList docElemNodes = docElem.getElementsByTagName("WordR"); // заполняем docElemNodes полями из словаря name/value по тегу WordR
+        DocumentBuilder builder = factory.newDocumentBuilder(); // получили билдер, который парсит XML и создает структуру документа
+        Document document = builder.parse(new File("dictionary.xml")); // запарсили XML, создав структуру Document
+
+        Element docElem = document.getDocumentElement(); // получаем тип Word из словаря
+
+        NodeList docElemNodes = docElem.getElementsByTagName("WordR"); // заполняем docElemNodes полями словаря name/value по тегу WordR
 
         int valueWR = 0;
         String nameWordR;
         String valueWordR;
-        ArrayList<String> rowElementsToClining = new ArrayList<String>(); //пустой массив для строк, которые совпадают по паттерну
+        ArrayList<String> rowElementsToCleaning = new ArrayList<String>(); //пустой массив для строк, которые совпадают по паттерну
 
         for (i = 0; i < docElemNodes.getLength(); i++) {
             Node DocItem = docElemNodes.item(i);
             NamedNodeMap attributes = DocItem.getAttributes();
-            nameWordR = attributes.getNamedItem("name").getNodeValue();
-            valueWordR = attributes.getNamedItem("value").getNodeValue();
-            makeRowElementsToClining(PDFList,rowElementsToClining,valueWR,nameWordR,valueWordR,"(?i).*?\\b" + nameWordR + "*№\\b.*?");
+            nameWordR = attributes.getNamedItem("name").getNodeValue(); // получаем родительский элемент по типу (Word)
+            valueWordR = attributes.getNamedItem("value").getNodeValue(); // получаем номер типа элемента из родительского (WordR)
+            makeRowElementsToCleaning(PDFList,rowElementsToCleaning,valueWR,nameWordR,valueWordR,"(?i).*?\\b" + nameWordR + "*№\\b.*?"); //
 
-            makeRowElementsToClining(PDFList,rowElementsToClining,valueWR,nameWordR,valueWordR,"(?i).*?\\b" + nameWordR + ".№\\b.*?");
-
+            makeRowElementsToCleaning(PDFList,rowElementsToCleaning,valueWR,nameWordR,valueWordR,"(?i).*?\\b" + nameWordR + ".№\\b.*?"); //задвижки
+            System.out.println(nameWordR);
             if (!(valueWR == 0)) {
                 NumDIC.add(valueWR);
                 n++;
@@ -193,32 +195,110 @@ public class DocumentPDF {
             valueWR = 0;
         }
 
+        deleteDuplicate(rowElementsToCleaning); //вычищаем повторяющиеся элементы
+        Collections.sort(rowElementsToCleaning); //сортируем в алфавитном порядке
+        deleteContains(rowElementsToCleaning); //вычищаем элементы, которые содержат повторяющиеся элементы
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //              Здесь начинается обработка собранного массива в соответствии со словарем
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////
+
         System.out.println("-----------------------------------------------------------------------");
+
+        // Сопоставляем массив очищенных элементов с их паттерном и вывод совпадений
+
+        // сначала создаем массив с элементами Word и связанными с ними size
+        // далее
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //                              Здесь начинается обработка по типу Word
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+        docElemNodes = docElem.getElementsByTagName("Word"); // получаем только типы (Word)
+        System.out.println("docElemNodes.getLength = " + docElemNodes.getLength());
+        DocWord[] mass = new DocWord[docElemNodes.getLength()];
+
         for (i = 0; i < docElemNodes.getLength(); i++) {
-            Node DocItem = docElemNodes.item(i);
-            NamedNodeMap attributes = DocItem.getAttributes();
-            nameWordR = attributes.getNamedItem("name").getNodeValue();
-            valueWordR = attributes.getNamedItem("value").getNodeValue();
-            System.out.println(nameWordR);
-            Pattern p = Pattern.compile(nameWordR);
-            System.out.println(p);
-            for (j = countLast + 1; j < count; j++) {
-                str = rowElementsToClining.get(j); //получаем строку из файла
-                Matcher m = p.matcher(str); //сопоставляем с паттерном
-                if (m.find()) {
-                    valueWR = Integer.parseInt(valueWordR); //переводим номер типа элемента в int
-                    System.out.println(nameWordR + "--" + j + "--" + valueWordR + "--" + p + "--" + str);
-                }
+            Node node = docElemNodes.item(i);
+            System.out.println("Найден элемент: " + node.getAttributes().getNamedItem("name") + ", его атрибут: " + node.getAttributes().getNamedItem("size"));
+
+            // формируем массив типа DocWord для формирования рабочего словаря, записываем параметры первого уровня
+            mass[i] = new DocWord(String.valueOf(node.getAttributes().getNamedItem("name")),
+                                  String.valueOf(node.getAttributes().getNamedItem("size")));
+        }
+        System.out.println("mass.length = " + mass.length);
+
+
+//        for (DocWord word: mass) {
+//            System.out.println(word.toString());
+//        }
+
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //                              Здесь начинается обработка по типу WordR
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        docElemNodes = docElem.getElementsByTagName("WordR"); // получаем только типы (Word)
+        System.out.println("docElemNodes.getLength =  " + docElemNodes.getLength());
+
+        for (i = 0; i < docElemNodes.getLength(); i++) {
+            Node node = docElemNodes.item(i);
+
+//            System.out.println("Найден элемент: " + node.getAttributes().getNamedItem("name") + ", его атрибут: " + node.getAttributes().getNamedItem("value"));
+            // Вывод информации про атрибут name
+//            for (k = 0; k < childNodes.getLength(); k++){
+////                  System.out.println("size = " + childNodes.getLength() + childNodes.toString());
+//                Element el = (Element) childNodes.item(k);
+////                  System.out.println(el);
+//                System.out.println("Найден элемент: " + node.getAttributes().getNamedItem("name") + ", его атрибут: " + el);
+//            }
+
+        }
+        // TODO: 16.11.2021 нужно добавить массив WordR внутрь объекта (DocWord)mass в переменную @attributes
+        for (i = 0; i < mass.length; i++){ // проходим по всем элементам типа Word
+            for (j = 0; j < mass[i].getSize(); j++){ // проходим по всем подтипам WordR для инициализации массива под них
+//                mass[i].setAttributes("здесь должен быть массив типа String из ");
             }
         }
-        deleteDuplicate(rowElementsToClining); //вычищаем повторяющиеся элементы
-        Collections.sort(rowElementsToClining); //сортируем в алфавитном порядке
-        deleteContains(rowElementsToClining); //вычищаем элементы, которые содержат повторяющиеся элементы
-        System.out.println("rowElementsToClining:\n" + rowElementsToClining);
+
+
+
+
+//        for (i = 0; i < docElemNodes.getLength(); i++) { // проходимся дла каждого типа в словаре
+//            int hitCounter = 0; // счетчик совпадений по полю nameWordR
+//            Node DocItem = docElemNodes.item(i);
+//            NamedNodeMap attributes = DocItem.getAttributes();
+//            nameWordR = attributes.getNamedItem("name").getNodeValue();
+//            valueWordR = attributes.getNamedItem("value").getNodeValue();
+//
+//            Pattern p = Pattern.compile(nameWordR);
+//            for (j = 0; j < rowElementsToCleaning.size(); j++) { // проходимся по каждому объекту массива
+//                str = rowElementsToCleaning.get(j); // получаем элемент массива
+//                Matcher m = p.matcher(str); // сопоставляем с паттерном
+////                System.out.println(m);
+//                if (m.find()) {
+//                    valueWR = Integer.parseInt(valueWordR); // переводим номер типа элемента в int
+////                    System.out.println(nameWordR + "--" + j + "--" + valueWordR + "--" + p + "--" + str);
+//                    hitCounter++;
+//                }
+//                //если присутствуют совпадения по паттерну, то выводим
+//            }
+//            if (hitCounter >= 1){
+//                System.out.println(nameWordR + "--" + j + "--" + valueWordR + "--" + hitCounter);
+//            }
+//        }
+
+// TODO: 10.11.2021 Нужно исправить косяк с добавлением в уникальные объекты тех, у которых для одного Word подходит несколько WordR
+
+        System.out.println("rowElementsToCleaning:\n" + rowElementsToCleaning);
         // заменяем элементы в соответствии с их типом в словаре
 
 /*
-         // здесь хуйня какая-то произошла
+         //здесь хуйня какая-то произошла, которая крашит сборку
         // выводим в EXCEL
         DocumentEXCEL docEL = new DocumentEXCEL(nameXLSX, nameEndXLSX);
         NodeList docElemNodes1 = docElem.getElementsByTagName("Word");
@@ -241,6 +321,7 @@ public class DocumentPDF {
         docEL.UpFormula(totalResult);
         docEL.AdditionFinal(totalResult, Bot.NameTZ, Bot.NumTZ);
         */
+    //конец функции SearchTO()
     }
 
 
@@ -266,20 +347,21 @@ public class DocumentPDF {
     }
 
 
-    public void makeRowElementsToClining(ArrayList<String> PDFList,
-                                         ArrayList<String> myArray,
-                                         int valueWR,
-                                         String nameWordR,
-                                         String valueWordR,
-                                         String pattern){
+    public void makeRowElementsToCleaning(ArrayList<String> PDFList,// файл для обработки
+                                          ArrayList<String> rowArray, // массив для объектов
+                                          int valueWR,
+                                          String nameWordR, // переменная имени типа объекта
+                                          String valueWordR, // номер типа объекта
+                                          String pattern){ //паттерн поиска объекта в файле
         Pattern p = Pattern.compile(pattern);
         for (int j = countLast + 1; j < count; j++) {
-            String str = PDFList.get(j);//получаем строку из файла
-            Matcher m = p.matcher(str);//сопоставляем с паттерном
+            String str = PDFList.get(j);// получаем строку из файла
+            Matcher m = p.matcher(str);// формируем паттерн
+//            System.out.println(p);
             if (m.find()) {
-                valueWR = Integer.parseInt(valueWordR); //переводим номер типа элемента в int
+                //valueWR = Integer.parseInt(valueWordR); //переводим номер типа элемента в int
                 System.out.println(nameWordR + "--" + j + "--" + valueWordR + "--" + p + "--" + str);
-                myArray.add(str); // добавляем элементы в массив по паттерну
+                rowArray.add(str); // добавляем элементы в массив по паттерну
             }
         }
     }

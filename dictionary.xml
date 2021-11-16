@@ -1,40 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
-		<Word name = "СИКН" value = "1">
+		<Word name = "СИКН" value = "1" size = "1">
 			<WordR name ="СИКН" value = "1"></WordR>
 		</Word>
-		<Word name = "Резервуар" value = "2">
+		<Word name = "Резервуар" value = "2" size = "1">
 			<WordR name ="Резервуар" value = "2"></WordR>
 		</Word>
-		<Word name = "НПС (станционные защиты, давления)" value = "3">
+		<Word name = "НПС (станционные защиты, давления)" value = "3" size = "3">
 			<WordR name = "НПС" value = "3"></WordR>
 			<WordR name ="станционные защиты" value = "3"></WordR>
 			<WordR name ="станционные давления" value = "3"></WordR>
 		</Word>
-		<Word name ="Задвижка" value = "4">
+		<Word name ="Задвижка" value = "4" size = "1">
 			<WordR name ="Задвижка" value = "4"></WordR>
 		</Word>
-		<Word name ="КП+ДПС" value = "5">
+		<Word name ="КП+ДПС" value = "5" size = "3">
 			<WordR name ="КП" value = "5"></WordR>
 			<WordR name ="ДПС" value = "5"></WordR>
 			<WordR name ="ПКУ" value = "5"></WordR>
 		</Word>
-		<Word name = "КПП СОД" value = "6">
+		<Word name = "КПП СОД" value = "6" size = "2">
 			<WordR name ="КПП" value = "6"></WordR>
 			<WordR name ="СОД" value = "6"></WordR>
 		</Word>
-		<Word name ="МНА/ПНА" value ="7">
+		<Word name ="МНА/ПНА" value ="7" size = "2">
 			<WordR name ="МНА" value = "7"></WordR>
 			<WordR name ="ПНА" value = "7"></WordR>
 		</Word>
-		<Word name ="СКЗ" value = "8">
+		<Word name ="СКЗ" value = "8" size = "1">
 			<WordR name ="СКЗ" value = "8"></WordR>
 		</Word>
-		<Word name ="ЛЭП/АПС" value = "9">
+		<Word name ="ЛЭП/АПС" value = "9" size = "2">
 			<WordR name ="ЛЭП" value = "9"></WordR>
 			<WordR name ="АПС" value = "9"></WordR>
 		</Word>
-		<Word name ="Ячейка ЗРУ,АВК, АВР,ЧРП, ТРН" value = "10">
+		<Word name ="Ячейка ЗРУ,АВК, АВР,ЧРП, ТРН" value = "10" size = "11">
 			<WordR name ="Ячейк" value = "10"></WordR>
 			<WordR name ="Ячейка ЗРУ" value = "10"></WordR>
 			<WordR name ="Ячейка АВК" value = "10"></WordR>
@@ -47,76 +47,76 @@
 			<WordR name ="БАВР" value = "10"></WordR>
 			<WordR name ="БМЦС" value = "10"></WordR>
 		</Word>
-		<Word name ="РД/САРД" value = "11">
+		<Word name ="РД/САРД" value = "11" size = "2">
 			<WordR name ="РД" value = "11"></WordR>
 			<WordR name ="САРД" value = "11"></WordR>
 		</Word>
-		<Word name ="Произвольный агрегат" value = "12">
+		<Word name ="Произвольный агрегат" value = "12" size = "1">
 			<WordR name ="Произвольный агрегат" value = "12"></WordR>
 		</Word>
-		<Word name ="Наливной пункт" value = "13">
+		<Word name ="Наливной пункт" value = "13" size = "1">
 			<WordR name ="Наливной пункт" value = "13"></WordR>
 		</Word>
-		<Word name ="АУОТ" value = "14">
+		<Word name ="АУОТ" value = "14" size = "1">
 			<WordR name ="АУОТ" value = "14"></WordR>
 		</Word>
-		<Word name ="БИК" value = "15">
+		<Word name ="БИК" value = "15" size = "1">
 			<WordR name ="БИК" value = "15"></WordR>
 		</Word>
-		<Word name ="ДЭС" value = "16">
+		<Word name ="ДЭС" value = "16" size = "1">
 			<WordR name ="ДЭС" value = "16"></WordR>
 		</Word>
-		<Word name ="Система электрообогрева трубопроводов" value = "17">
+		<Word name ="Система электрообогрева трубопроводов" value = "17" size = "2">
 			<WordR name ="Система электрообогрева трубопроводов" value = "17"></WordR>
 			<WordR name ="СЭТ" value = "17"></WordR>
 		</Word>
-		<Word name ="ФГУ" value = "18">
+		<Word name ="ФГУ" value = "18" size = "1">
 			<WordR name ="ФГУ" value = "18"></WordR>
 		</Word>
-		<Word name ="КИП" value = "19">
+		<Word name ="КИП" value = "19" size = "1">
 			<WordR name ="КИП" value = "19"></WordR>
 		</Word>
-		<Word name ="Пункт подогрева нефти" value = "20">
+		<Word name ="Пункт подогрева нефти" value = "20" size = "2">
 			<WordR name ="Пункт подогрева нефти" value = "20"></WordR>
 			<WordR name ="ППН" value = "20"></WordR>
 		</Word>
-		<Word name ="Причал морского наливного терминала" value = "21">
+		<Word name ="Причал морского наливного терминала" value = "21" size = "1">
 			<WordR name ="Причал морского наливного терминала" value = "21"></WordR>
 		</Word>
-		<Word name ="РП" value = "22">
+		<Word name ="РП" value = "22" size = "1">
 			<WordR name ="РП" value = "22"></WordR>
 		</Word>
-		<Word name ="Взаимодействие с СОУ на 1 ЛУ" value = "23">
+		<Word name ="Взаимодействие с СОУ на 1 ЛУ" value = "23" size = "2">
 			<WordR name ="Взаимодействие с СОУ на 1 ЛУ" value = "23"></WordR>
 			<WordR name ="СОУ" value = "23"></WordR>
 		</Word>
-		<Word name ="Взаимодействие с ЦСПА на 1 ЛУ" value = "24">
+		<Word name ="Взаимодействие с ЦСПА на 1 ЛУ" value = "24" size = "2">
 			<WordR name ="Взаимодействие с ЦСПА на 1 ЛУ" value = "24"></WordR>
 			<WordR name ="ЦСПА" value = "24"></WordR>
 		</Word>
-		<Word name ="Технологическая емкость" value = "25">
+		<Word name ="Технологическая емкость" value = "25" size = "2">
 			<WordR name ="Технологическая емкость" value = "25"></WordR>
 			<WordR name ="ТЕ" value = "25"></WordR>
 		</Word>
-		<Word name ="Расходомер" value = "26">
+		<Word name ="Расходомер" value = "26" size = "1">
 			<WordR name ="Расходомер" value = "26"></WordR>
 		</Word>
-		<Word name ="Вспомогательные системы" value = "27">
+		<Word name ="Вспомогательные системы" value = "27" size = "1">
 			<WordR name ="Вспомогательные системы" value = "27"></WordR>
 		</Word>
-		<Word name ="СИКН разработка новой ЭФ (глубокая переработка)" value = "28">
+		<Word name ="СИКН разработка новой ЭФ (глубокая переработка)" value = "28" size = "1">
 			<WordR name ="СИКН разработка новой ЭФ (глубокая переработка)" value = "28"></WordR>
 		</Word>
-		<Word name ="НПС разработка новой ЭФ (глубокая переработка)" value = "29">
+		<Word name ="НПС разработка новой ЭФ (глубокая переработка)" value = "29" size = "1">
 			<WordR name ="НПС разработка новой ЭФ (глубокая переработка)" value = "29"></WordR>
 		</Word>
-		<Word name ="РП разработка новой ЭФ (глубокая переработка)" value = "30">
+		<Word name ="РП разработка новой ЭФ (глубокая переработка)" value = "30" size = "1">
 			<WordR name ="РП разработка новой ЭФ (глубокая переработка)" value = "30"></WordR>
 		</Word>
-		<Word name ="ЛУ разработка новой ЭФ (глубокая переработка)" value = "31">
+		<Word name ="ЛУ разработка новой ЭФ (глубокая переработка)" value = "31" size = "1">
 			<WordR name ="ЛУ разработка новой ЭФ (глубокая переработка)" value = "31"></WordR>
 		</Word>
-		<Word name ="Разработка новой другой ЭФ (глубокая переработка)" value = "32">
+		<Word name ="Разработка новой другой ЭФ (глубокая переработка)" value = "32" size = "1">
 			<WordR name ="Разработка новой другой ЭФ (глубокая переработка)" value = "32"></WordR>
 		</Word>
 </root>
