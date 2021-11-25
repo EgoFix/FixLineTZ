@@ -16,7 +16,7 @@
          <children>
             <HBox prefHeight="42.0" prefWidth="600.0">
                <children>
-                  <Button fx:id="upper_pane_button1" mnemonicParsing="false" prefHeight="50.0" prefWidth="82.0" text="Button" />
+                  <Button fx:id="upperPaneButton1" mnemonicParsing="false" prefHeight="50.0" prefWidth="82.0" text="Button" />
                </children>
             </HBox>
          </children>
@@ -48,13 +48,13 @@
       </Pane>
    </center>
    <left>
-      <TreeTableView fx:id="left_table" prefHeight="200.0" prefWidth="350.0" BorderPane.alignment="CENTER" />
+      <TreeTableView fx:id="leftTable" prefHeight="200.0" prefWidth="350.0" BorderPane.alignment="CENTER" />
    </left>
    <bottom>
       <HBox id="bottom_pane" prefHeight="40.0" prefWidth="1280.0" style="-fx-background-color: #284073;" BorderPane.alignment="CENTER" />
    </bottom>
    <right>
-      <TableView fx:id="right_table" prefHeight="200.0" prefWidth="350.0" BorderPane.alignment="CENTER">
+      <TableView fx:id="rightTable" prefHeight="200.0" prefWidth="350.0" BorderPane.alignment="CENTER">
         <columns>
             <TableColumn maxWidth="50.0" minWidth="20.0" prefWidth="50.0" text="№" />
           <TableColumn maxWidth="300.0" minWidth="250.0" prefWidth="250.0" text="Объект" />

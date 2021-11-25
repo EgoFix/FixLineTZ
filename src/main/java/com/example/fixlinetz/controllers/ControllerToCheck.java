@@ -15,13 +15,13 @@ public class ControllerToCheck {
     /////////////////////////////////////////////////////////////////////////////////////////
 
     @FXML
-    private TreeTableView left_table;
+    private TreeTableView leftTable;
 
     @FXML
-    private TableView right_table;
+    private TableView rightTable;
 
     @FXML
-    private Button upper_pane_button1;
+    private Button upperPaneButton1;
 
 
 //    @FXML

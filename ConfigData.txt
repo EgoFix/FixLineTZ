@@ -1,0 +1,6 @@
+// параметры запуска проекта
+--module-path "C:\Users\Danil\.m2\repository\org\openjfx\javafx-fxml\15.0.1" --add-modules javafx.controls,javafx.fxml
+
+
+// параметры для панели wind_to_check
+xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" 
