@@ -11,22 +11,22 @@ import java.util.regex.Pattern;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamReader;
 
+import com.example.fixlinetz.classes.DocWord;
 import org.apache.pdfbox.cos.COSDocument;
 import org.apache.pdfbox.io.RandomAccessFile;
 import org.apache.pdfbox.pdfparser.PDFParser;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 
-import org.apache.poi.xddf.usermodel.chart.XDDFManualLayout;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
+import com.example.fixlinetz.classes.DocWord;
 
 public class DocumentPDF {
     private static String namePDF;
@@ -66,6 +66,7 @@ public class DocumentPDF {
             writer.close();
             System.out.println("Запись завершена!");
             randomAccessFile.close();
+            pdDoc.close();
         } catch (IOException e) {
             //catch
         }
@@ -284,36 +285,54 @@ public class DocumentPDF {
                     hitCounter++;
             }
             // выводим количество элементов в соответствии с их типом
-            System.out.println("mass[" + (i + 1) + "] " + mass[i].getWordName() + " hitCounter = " + hitCounter);
+//            System.out.println("mass[" + (i + 1) + "] " + mass[i].getWordName() + " hitCounter = " + hitCounter);
+            mass[i].setValue(hitCounter);
+        }
+
+        for (DocWord word: mass) {
+            System.out.println(word.toString());
         }
 
         System.out.println("rowElementsToCleaning:\n" + rowElementsToCleaning);
         // заменяем элементы в соответствии с их типом в словаре
 
-/*
-         //здесь хуйня какая-то произошла, которая крашит сборку
+        System.out.println(
+                "        /////////////////////////////////////////////////////////////////////////////////////////////////////////\n" +
+                "        //                    Здесь начинается вывод количества уникальных элементов в Excel\n" +
+                "        /////////////////////////////////////////////////////////////////////////////////////////////////////////");
+
+
+        // здесь хуйня какая-то произошла, которая крашит сборку
         // выводим в EXCEL
+//        DocumentEXCEL docEL = new DocumentEXCEL(nameXLSX, nameEndXLSX);
+//        NodeList docElemNodes1 = docElem.getElementsByTagName("Word");
+//        for (i = 0; i < docElemNodes1.getLength(); i++) {
+//            Node DocItem1 = docElemNodes1.item(i);
+//            NamedNodeMap attributes1 = DocItem1.getAttributes();
+//            String nameOWord = null;
+//            String nameWord = attributes1.getNamedItem("name").getNodeValue();
+//            String valueWord = attributes1.getNamedItem("value").getNodeValue();
+//            valueWR = Integer.parseInt(valueWord);
+//            for (j = 0; j < n; j++) {
+//                if (NumDIC.get(j) == valueWR) {
+//                    nameOWord = nameWord;
+//                }
+//            }
+//            if (!(nameOWord == null)) {
+//                docEL.AccountEXCELL(i, nameOWord);
+//            }
+//        }
+//        docEL.UpFormula(totalResult);
+//        docEL.AdditionFinal(totalResult, Bot.NameTZ, Bot.NumTZ);
+
+
         DocumentEXCEL docEL = new DocumentEXCEL(nameXLSX, nameEndXLSX);
-        NodeList docElemNodes1 = docElem.getElementsByTagName("Word");
-        for (i = 0; i < docElemNodes1.getLength(); i++) {
-            Node DocItem1 = docElemNodes1.item(i);
-            NamedNodeMap attributes1 = DocItem1.getAttributes();
-            String nameOWord = null;
-            String nameWord = attributes1.getNamedItem("name").getNodeValue();
-            String valueWord = attributes1.getNamedItem("value").getNodeValue();
-            valueWR = Integer.parseInt(valueWord);
-            for (j = 0; j < n; j++) {
-                if (NumDIC.get(j) == valueWR) {
-                    nameOWord = nameWord;
-                }
-            }
-            if (!(nameOWord == null)) {
-                docEL.AccountEXCELL(i, nameOWord);
-            }
+        for (i = 0; i < mass.length; i++){ // проходимся по всем Word
+           docEL.AccountEXCELL(i, mass[i].getWordName(), mass[i].getValue()); // пишем в Excel
         }
+        System.out.println("Записано");
         docEL.UpFormula(totalResult);
         docEL.AdditionFinal(totalResult, Bot.NameTZ, Bot.NumTZ);
-        */
 
     //конец функции SearchTO()
     }

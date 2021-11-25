@@ -1,6 +1,6 @@
 module com.example.fixlinetz {
-    requires javafx.controls;
     requires javafx.fxml;
+    requires javafx.controls;
     requires java.xml;
     requires org.apache.poi.ooxml;
     requires org.apache.pdfbox;
@@ -10,4 +10,8 @@ module com.example.fixlinetz {
 
     opens com.example.fixlinetz to javafx.fxml;
     exports com.example.fixlinetz;
+    exports com.example.fixlinetz.controllers;
+    opens com.example.fixlinetz.controllers to javafx.fxml;
+    exports com.example.fixlinetz.classes;
+    opens com.example.fixlinetz.classes to javafx.fxml;
 }

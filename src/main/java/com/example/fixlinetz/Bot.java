@@ -20,11 +20,12 @@ public class Bot {
 
     //функция для запуска обработки файлов
     public void AlWorkBot(String NamePdf, String NameDic, String NameFin) throws ParserConfigurationException, SAXException, IOException {
-//        String NamePDFDOC = NamePdf; //входящий
+        String NamePDFDOC = NamePdf; //входящий
 //        String NameDIC = NameDic; //словарь
 //        String NameFIN = NameFin; //выходящий
 
-        String NamePDFDOC = "D:\\\\Файлы для ТЗ\\\\Г.9.0000.20148-ТУР_ГТП-500.000-ЕСДУ.ТЗ.pdf"; //входящий
+//        String NamePDFDOC = "D:\\\\Файлы для ТЗ\\\\Г.9.0000.20148-ТУР_ГТП-500.000-ЕСДУ.ТЗ.pdf"; //входящий
+//        String NamePDFDOC = "D:\\\\Файлы для ТЗ\\\\Г.9.0000.22179-ТЗС_ГТП-00.000-ЕСДУ.ТЗ1.pdf"; //входящий
         String NameDIC = "D:\\\\Файлы для ТЗ\\\\Таблица для расчётов доработок.xlsx"; //словарь
         String NameFIN = "D:\\\\Файлы для ТЗ\\\\Таблица для расчётов доработок.xlsx"; //выходящий
 
@@ -35,7 +36,7 @@ public class Bot {
         DocumentPDF document = new DocumentPDF(NamePDFDOC, NameDIC, NameFIN);
 
         System.out.println("document.WithoutTESS() - start");
-//        document.WithoutTESS(); // создает текстовый файл в котором все данные из pdf-ки
+        document.WithoutTESS(); // создает текстовый файл в котором все данные из pdf-ки
         System.out.println("document.WithoutTESS() - stop");
 
         System.out.println("document.SearchTrials(PDFList) - start");

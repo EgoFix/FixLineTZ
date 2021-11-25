@@ -1,7 +1,6 @@
 package com.example.fixlinetz;
 
 
-
 import java.io.File;
 import java.io.FileInputStream;
 
@@ -16,6 +15,7 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+
 public class DocumentEXCEL {
 
     private String NameXLSX;
@@ -26,29 +26,27 @@ public class DocumentEXCEL {
         this.NameEndXLSX = NameEndXLSX;
     }
 
-    public void AccountEXCELL(int i, String name) throws IOException {
-        File file = new File(NameXLSX);
-        FileInputStream inputStream = new FileInputStream(file);
+
+    public void AccountEXCELL(int i, String name, int value) throws IOException {
+        FileInputStream inputStream = new FileInputStream(NameXLSX);
         XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
-        XSSFSheet sheet = workbook.getSheetAt(4);
-        XSSFCell cell1 = sheet.getRow(i + 16).getCell(0);
-        XSSFCell cell2 = sheet.getRow(i + 16).getCell(1);
+        XSSFSheet sheet = workbook.getSheetAt(4); //выбрали лист, куда пишем
 
-        String nameS = cell1.getStringCellValue();
-        System.out.println("ЭКСЕЛЬ - " + nameS + " / XML - " + name);
+        XSSFCell cell0 = sheet.getRow(i + 16).getCell(0); // получили ссылку на ячейку с WordR
+        XSSFCell cell1 = sheet.getRow(i + 16).getCell(1); // получили ссылку на ячейку с кол-вом WordR
 
-        if (nameS.contains(name)) {
-            cell2.setCellValue(1);
-            System.out.println("В УСЛОВИИИ");
-        }
+        cell0.setCellValue(name); // пишем WordR
+        cell1.setCellValue(value); // пишем кол-во WordR
+
         inputStream.close();
-
-        FileOutputStream out = new FileOutputStream(file);
+        FileOutputStream out = new FileOutputStream(NameXLSX);
         workbook.write(out);
-
         out.close();
+//        System.out.println("Обновления завершены. Изменения сохранены");
         workbook.close();
     }
+
+
     public void UpFormula(double mass[]) throws IOException{
         FileInputStream inputStream = new FileInputStream(NameXLSX);
         XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
@@ -78,6 +76,7 @@ public class DocumentEXCEL {
                 mass[i - 16] = cell1.getNumericCellValue();
             }
         }
+
         inputStream.close();
         FileOutputStream out = new FileOutputStream(NameXLSX);
         workbook.write(out);

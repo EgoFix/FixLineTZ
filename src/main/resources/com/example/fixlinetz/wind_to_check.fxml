@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TreeTableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane id="main_pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.fixlinetz.controllers.ControllerToCheck">
+   <top>
+      <Pane id="upper_pane" prefHeight="40.0" prefWidth="600.0" style="-fx-background-color: #284073;" BorderPane.alignment="CENTER">
+         <children>
+            <HBox prefHeight="42.0" prefWidth="600.0">
+               <children>
+                  <Button fx:id="upper_pane_button1" mnemonicParsing="false" prefHeight="50.0" prefWidth="82.0" text="Button" />
+               </children>
+            </HBox>
+         </children>
+      </Pane>
+   </top>
+   <center>
+      <Pane id="center_pane" prefHeight="720.0" prefWidth="750.0" style="-fx-background-color: #5476bf;" BorderPane.alignment="CENTER">
+         <children>
+            <VBox prefHeight="720.0" prefWidth="580.0">
+               <children>
+                  <Pane prefHeight="240.0" prefWidth="200.0" style="-fx-background-color: #2c4c90; -fx-border-color: #000000; -fx-border-width: 2;">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </Pane>
+                  <Pane prefHeight="240.0" prefWidth="200.0" style="-fx-background-color: #365cb0; -fx-border-color: #000000; -fx-border-width: 2;">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </Pane>
+                  <Pane prefHeight="240.0" prefWidth="200.0" style="-fx-background-color: #6385cf; -fx-border-color: #000000; -fx-border-width: 2;">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </Pane>
+               </children>
+            </VBox>
+         </children>
+      </Pane>
+   </center>
+   <left>
+      <TreeTableView fx:id="left_table" prefHeight="200.0" prefWidth="350.0" BorderPane.alignment="CENTER" />
+   </left>
+   <bottom>
+      <HBox id="bottom_pane" prefHeight="40.0" prefWidth="1280.0" style="-fx-background-color: #284073;" BorderPane.alignment="CENTER" />
+   </bottom>
+   <right>
+      <TableView fx:id="right_table" prefHeight="200.0" prefWidth="350.0" BorderPane.alignment="CENTER">
+        <columns>
+            <TableColumn maxWidth="50.0" minWidth="20.0" prefWidth="50.0" text="№" />
+          <TableColumn maxWidth="300.0" minWidth="250.0" prefWidth="250.0" text="Объект" />
+        </columns>
+      </TableView>
+   </right>
+</BorderPane>

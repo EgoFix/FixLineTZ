@@ -1,4 +1,4 @@
-package com.example.fixlinetz;
+package com.example.fixlinetz.controllers;
 
 
 import java.io.File;
@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import com.example.fixlinetz.Bot;
 import org.xml.sax.SAXException;
 
 import javafx.fxml.FXML;
@@ -39,6 +40,8 @@ public class Controller {
 
     @FXML
     private Button buttonClose;
+
+
 
     @FXML
     void initialize() {

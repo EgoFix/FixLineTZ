@@ -1,4 +1,4 @@
-package com.example.fixlinetz;
+package com.example.fixlinetz.classes;
 
 import java.util.Arrays;
 
@@ -32,7 +32,7 @@ public class DocWord {
     }
 
 
-    DocWord(String wordName,String size){
+    public DocWord(String wordName, String size){
         setWordName(wordName);
         setSize(size);
     }

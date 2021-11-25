@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="350.0" prefWidth="350.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.fixlinetz.Controller">
+<BorderPane prefHeight="350.0" prefWidth="350.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.fixlinetz.controllers.Controller">
    <center>
       <Pane prefHeight="283.0" prefWidth="350.0" style="-fx-background-color: #5476bf;" BorderPane.alignment="CENTER">
          <children>
