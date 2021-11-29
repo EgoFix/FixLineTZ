@@ -6,7 +6,7 @@ import java.io.IOException;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import com.example.fixlinetz.Bot;
+import com.example.fixlinetz.Main;
 import org.xml.sax.SAXException;
 
 import javafx.fxml.FXML;
@@ -19,46 +19,40 @@ public class Controller {
 
     @FXML
     private Button buttonReview1;
-
     @FXML
     private TextField textReview1;
-
     @FXML
     private Button buttonReview2;
-
     @FXML
     private TextField textReview2;
-
     @FXML
     private Button buttonReview3;
-
     @FXML
     private TextField textReview3;
-
     @FXML
     private Button buttonStart;
-
     @FXML
     private Button buttonClose;
 
 
-
     @FXML
-    void initialize() {
-        buttonClose.setOnAction(event->{
+    public void initialize() {
+        System.out.println("Main window initialized");
+
+        buttonClose.setOnAction(event -> {
             Stage stage = (Stage) buttonClose.getScene().getWindow();
             stage.close();
         });
-        buttonReview1.setOnAction(event->{
+        buttonReview1.setOnAction(event -> {
             final FileChooser fileChooser = new FileChooser();
-            FileChooser.ExtensionFilter extFil = new FileChooser.ExtensionFilter("PDF files (*.pdf)","*.PDF","*.pdf");
+            FileChooser.ExtensionFilter extFil = new FileChooser.ExtensionFilter("PDF files (*.pdf)", "*.PDF", "*.pdf");
             fileChooser.getExtensionFilters().add(extFil);
             File file = fileChooser.showOpenDialog(null);
             if (!(file == null)) {
                 textReview1.setText(file.getAbsolutePath());
             }
         });
-        buttonReview2.setOnAction(event->{
+        buttonReview2.setOnAction(event -> {
             final FileChooser fileChooser = new FileChooser();
             FileChooser.ExtensionFilter extFil = new FileChooser.ExtensionFilter("Excel Files (*.xlsx)", "*.XLSX", "*.xlsx");
             fileChooser.getExtensionFilters().add(extFil);
@@ -67,7 +61,7 @@ public class Controller {
                 textReview2.setText(file.getAbsolutePath());
             }
         });
-        buttonReview3.setOnAction(event->{
+        buttonReview3.setOnAction(event -> {
             final FileChooser fileChooser = new FileChooser();
             FileChooser.ExtensionFilter extFil = new FileChooser.ExtensionFilter("Excel Files (*.xlsx)", "*.XLSX", "*.xlsx");
             fileChooser.getExtensionFilters().add(extFil);
@@ -76,22 +70,26 @@ public class Controller {
                 textReview3.setText(file.getAbsolutePath());
             }
         });
-        buttonStart.setOnAction(event->{
 
-            String str1 = textReview1.getText();
-            String str2 = textReview2.getText();
-            String str3 = textReview3.getText();
-            if ((str1==null) || (str2==null) || (str3==null) ) {
+
+        buttonStart.setOnAction(event -> {
+
+            String str1 = textReview1.getText();//pdf
+            String str2 = textReview2.getText();//input
+            String str3 = textReview3.getText();//output
+            if ((str1 == null) || (str2 == null) || (str3 == null)) {
                 System.out.println("FISOIDOSIDps");
-            }
-            else {
+            } else {
                 System.out.println(str1);
                 System.out.println(str2);
                 System.out.println(str3);
-                Bot bot = new Bot();
+                //Bot bot = new Bot();
                 try {
-                    bot.AlWorkBot(str1, str2, str3);
-                    System.out.println("ВЩТУ");
+
+                    Main.getBot().setNames(str1, str2, str3); // записали названия документов
+                    Main.getBot().AlWorkBot(); // запускаем обработку PDF
+
+                    System.out.println("Обработка файлов завершена");
                 } catch (ParserConfigurationException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();

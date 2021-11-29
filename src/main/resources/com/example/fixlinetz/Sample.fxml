@@ -40,6 +40,7 @@
    <top>
       <Pane prefHeight="50.0" prefWidth="350.0" style="-fx-background-color: #284073;" BorderPane.alignment="CENTER">
          <children>
+
             <Label layoutX="19.0" layoutY="12.0" text="Автоматический подсчет трудозатрат" textFill="WHITE">
                <font>
                   <Font size="18.0" />
@@ -50,5 +51,8 @@
    </top>
    <bottom>
       <Pane prefHeight="20.0" prefWidth="350.0" style="-fx-background-color: #284073;" BorderPane.alignment="CENTER" />
+      <!--
+      <Button layoutX="19.0" layoutY="12.0" mnemonicParsing="false" fx:id="bottomPaneButton" text="Go to Second Stage" />
+      -->
    </bottom>
 </BorderPane>

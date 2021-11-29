@@ -2,7 +2,7 @@ package com.example.fixlinetz.classes;
 
 import javafx.beans.property.SimpleStringProperty;
 
-public class Word {
+public class PanelWord {
     private SimpleStringProperty num;
     private SimpleStringProperty text;
 
@@ -20,7 +20,7 @@ public class Word {
         return text;
     }
 
-    public Word(String num, String text){
+    public PanelWord(String num, String text){
         this.num = new SimpleStringProperty(num);
         this.text = new SimpleStringProperty(text);
     }

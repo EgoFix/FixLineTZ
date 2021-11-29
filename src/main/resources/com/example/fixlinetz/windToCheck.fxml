@@ -16,7 +16,7 @@
          <children>
             <HBox prefHeight="42.0" prefWidth="600.0">
                <children>
-                  <Button fx:id="upperPaneButton1" mnemonicParsing="false" prefHeight="50.0" prefWidth="82.0" text="Button" />
+                  <Button fx:id="upperPaneButton1" mnemonicParsing="false" prefHeight="50.0" prefWidth="165.0" text="SearchTOCheck" />
                </children>
             </HBox>
          </children>

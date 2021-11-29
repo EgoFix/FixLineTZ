@@ -1,4 +1,4 @@
-package com.example.fixlinetz;
+package com.example.fixlinetz.documents;
 
 
 import java.io.*;
@@ -12,7 +12,10 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import com.example.fixlinetz.Bot;
 import com.example.fixlinetz.classes.DocWord;
+import com.example.fixlinetz.controllers.ControllerToCheck;
+import com.example.fixlinetz.documents.DocumentEXCEL;
 import org.apache.pdfbox.cos.COSDocument;
 import org.apache.pdfbox.io.RandomAccessFile;
 import org.apache.pdfbox.pdfparser.PDFParser;
@@ -26,8 +29,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import com.example.fixlinetz.classes.DocWord;
-
 public class DocumentPDF {
     private static String namePDF;
     public static String nameXLSX;
@@ -37,6 +38,8 @@ public class DocumentPDF {
     public double totalResult[] = new double[4];
     private int count, countLast, countSave;
 
+    private DocWord mass;
+
     public DocumentPDF(String NamePdf, String NameXlsx, String NameFin) {
         namePDF = NamePdf;
         nameXLSX = NameXlsx;
@@ -45,6 +48,7 @@ public class DocumentPDF {
 
     //СОДЕРЖИМОЕ (БЕЗ ОКР)
     public void WithoutTESS() {
+        System.out.println("document.WithoutTESS() - start");
         PDFTextStripper pdfStripper;
         PDDocument pdDoc;
         COSDocument cosDoc;
@@ -67,14 +71,19 @@ public class DocumentPDF {
             System.out.println("Запись завершена!");
             randomAccessFile.close();
             pdDoc.close();
+
+            //
+
         } catch (IOException e) {
             //catch
         }
+        System.out.println("document.WithoutTESS() - stop");
     }
 
 
     //ПОИСК ИСПЫТАНИЙ
     public void SearchTrials(ArrayList<String> PDFList) throws FileNotFoundException {
+        System.out.println("document.SearchTrials(PDFList) - start");
         File ContentOF = new File("ContentOfPDF.txt");
         int k = 0;
         count = 0;
@@ -143,11 +152,12 @@ public class DocumentPDF {
             }
         }
         Bot.count = count;
+        System.out.println("document.SearchTrials(PDFList) - stop");
     }
 
-
-    //ПОИСК ТО
-    public void SearchTO(ArrayList<String> PDFList, int count) throws ParserConfigurationException, SAXException, IOException {
+    //ПОИСК ТО ДЛЯ ПРОВЕРКИ
+    public void SearchTOCheck(ArrayList<String> PDFList, int count) throws ParserConfigurationException, SAXException, IOException {
+        System.out.println("document.SearchTOCheck(PDFList,count) - start");
         int i, j;
         int k = 0;
         ArrayList<Integer> NumDIC = new ArrayList<>();
@@ -170,9 +180,7 @@ public class DocumentPDF {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder(); // получили билдер, который парсит XML и создает структуру документа
         Document document = builder.parse(new File("dictionary.xml")); // запарсили XML, создав структуру Document
-
         Element docElem = document.getDocumentElement(); // получаем тип Word из словаря
-
         NodeList docElemNodes = docElem.getElementsByTagName("WordR"); // заполняем docElemNodes полями словаря name/value по тегу WordR
 
         int valueWR = 0;
@@ -182,17 +190,72 @@ public class DocumentPDF {
 
         System.out.println(
                 "        /////////////////////////////////////////////////////////////////////////////////////////////////////////\n" +
-                "        //              Здесь начинается сборка массива для обработки\n" +
-                "        /////////////////////////////////////////////////////////////////////////////////////////////////////////");
+                        "        //              Здесь начинается сборка массива для обработки\n" +
+                        "        /////////////////////////////////////////////////////////////////////////////////////////////////////////");
 
         for (i = 0; i < docElemNodes.getLength(); i++) {
             Node DocItem = docElemNodes.item(i);
             NamedNodeMap attributes = DocItem.getAttributes();
             nameWordR = attributes.getNamedItem("name").getNodeValue(); // получаем родительский элемент по типу (Word)
             valueWordR = attributes.getNamedItem("value").getNodeValue(); // получаем номер типа элемента из родительского (WordR)
-            makeRowElementsToCleaning(PDFList,rowElementsToCleaning,valueWR,nameWordR,valueWordR,"(?i).*?\\b" + nameWordR + "*№\\b.*?"); //
+            makeRowElementsToCleaning(PDFList, rowElementsToCleaning, valueWR, nameWordR, valueWordR, "(?i).*?\\b" + nameWordR + "*\\b.*?"); //
 
-            makeRowElementsToCleaning(PDFList,rowElementsToCleaning,valueWR,nameWordR,valueWordR,"(?i).*?\\b" + nameWordR + ".№\\b.*?"); //задвижки
+            makeRowElementsToCleaning(PDFList, rowElementsToCleaning, valueWR, nameWordR, valueWordR, "(?i).*?\\b" + nameWordR + ".№\\b.*?"); //задвижки
+            System.out.println(nameWordR);
+            if (!(valueWR == 0)) {
+                NumDIC.add(valueWR);
+                n++;
+            }
+            valueWR = 0;
+        }
+    }
+
+    //ПОИСК ТО
+    public void SearchTO(ArrayList<String> PDFList, int count) throws ParserConfigurationException, SAXException, IOException {
+        System.out.println("document.SearchTO(PDFList,count) - start");
+        int i, j;
+        int k = 0;
+        ArrayList<Integer> NumDIC = new ArrayList<>();
+        String str;
+        for (i = 0; i < count; i++) {
+            str = PDFList.get(i);
+            if (str.contains("Перечень")) {
+                if (str.contains("сигналов") || str.contains("параметров")) {
+                    k++;
+                }
+            }
+            if (k == 1) {
+                countLast = i;
+            }
+            k = 0;
+        }
+        int n = 0;
+
+        // выводим в консоль
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder(); // получили билдер, который парсит XML и создает структуру документа
+        Document document = builder.parse(new File("dictionary.xml")); // запарсили XML, создав структуру Document
+        Element docElem = document.getDocumentElement(); // получаем тип Word из словаря
+        NodeList docElemNodes = docElem.getElementsByTagName("WordR"); // заполняем docElemNodes полями словаря name/value по тегу WordR
+
+        int valueWR = 0;
+        String nameWordR;
+        String valueWordR;
+        ArrayList<String> rowElementsToCleaning = new ArrayList<String>(); //пустой массив для строк, которые совпадают по паттерну
+
+        System.out.println(
+                "        /////////////////////////////////////////////////////////////////////////////////////////////////////////\n" +
+                        "        //              Здесь начинается сборка массива для обработки\n" +
+                        "        /////////////////////////////////////////////////////////////////////////////////////////////////////////");
+
+        for (i = 0; i < docElemNodes.getLength(); i++) {
+            Node DocItem = docElemNodes.item(i);
+            NamedNodeMap attributes = DocItem.getAttributes();
+            nameWordR = attributes.getNamedItem("name").getNodeValue(); // получаем родительский элемент по типу (Word)
+            valueWordR = attributes.getNamedItem("value").getNodeValue(); // получаем номер типа элемента из родительского (WordR)
+            makeRowElementsToCleaning(PDFList, rowElementsToCleaning, valueWR, nameWordR, valueWordR, "(?i).*?\\b" + nameWordR + "*№\\b.*?"); //
+
+            makeRowElementsToCleaning(PDFList, rowElementsToCleaning, valueWR, nameWordR, valueWordR, "(?i).*?\\b" + nameWordR + ".№\\b.*?"); //задвижки
             System.out.println(nameWordR);
             if (!(valueWR == 0)) {
                 NumDIC.add(valueWR);
@@ -201,27 +264,23 @@ public class DocumentPDF {
             valueWR = 0;
         }
 
+        // для панельки toCheck дальнейшая обработка не требуется
+
         deleteDuplicate(rowElementsToCleaning); //вычищаем повторяющиеся элементы
         Collections.sort(rowElementsToCleaning); //сортируем в алфавитном порядке
         deleteContains(rowElementsToCleaning); //вычищаем элементы, которые содержат повторяющиеся элементы
 
 
-
         System.out.println(
                 "        /////////////////////////////////////////////////////////////////////////////////////////////////////////\n" +
-                "        //              Здесь начинается обработка собранного массива в соответствии со словарем\n" +
-                "        /////////////////////////////////////////////////////////////////////////////////////////////////////////");
-
-        // Сопоставляем массив очищенных элементов с их паттерном и вывод совпадений
-
-        // сначала создаем массив с элементами Word и связанными с ними size
-        // далее
+                        "        //              Здесь начинается обработка собранного массива в соответствии со словарем\n" +
+                        "        /////////////////////////////////////////////////////////////////////////////////////////////////////////");
 
 
         System.out.println(
                 "        /////////////////////////////////////////////////////////////////////////////////////////////////////////\n" +
-                "        //                              Здесь начинается обработка по типу Word\n" +
-                "        /////////////////////////////////////////////////////////////////////////////////////////////////////////");
+                        "        //                              Здесь начинается обработка по типу Word\n" +
+                        "        /////////////////////////////////////////////////////////////////////////////////////////////////////////");
 
         docElemNodes = docElem.getElementsByTagName("Word"); // получаем только типы (Word)
         System.out.println("docElemNodes.getLength = " + docElemNodes.getLength());
@@ -233,39 +292,39 @@ public class DocumentPDF {
 
             // формируем массив типа DocWord для формирования рабочего словаря, записываем параметры первого уровня
             mass[i] = new DocWord(String.valueOf(node.getAttributes().getNamedItem("name")),
-                                  String.valueOf(node.getAttributes().getNamedItem("size")));
+                    String.valueOf(node.getAttributes().getNamedItem("size")));
         }
         System.out.println("mass.length = " + mass.length);
 
-        for (DocWord word: mass) {
+        for (DocWord word : mass) {
             System.out.println(word.toString());
         }
 
         System.out.println(
                 "        /////////////////////////////////////////////////////////////////////////////////////////////////////////\n" +
-                "        //                              Здесь начинается обработка по типу WordR\n" +
-                "        /////////////////////////////////////////////////////////////////////////////////////////////////////////");
+                        "        //                              Здесь начинается обработка по типу WordR\n" +
+                        "        /////////////////////////////////////////////////////////////////////////////////////////////////////////");
 
         docElemNodes = docElem.getElementsByTagName("WordR"); // получаем только типы (Word)
         System.out.println("docElemNodes.getLength =  " + docElemNodes.getLength());
 
-        for (k = 0; k < docElemNodes.getLength();){ // перебираем строки
-            for (i = 0; i < mass.length; i++){ // проходим по всем типам
-                for (j = 0; j < mass[i].getSize(); j++, k++){ // перебираем WordR
+        for (k = 0; k < docElemNodes.getLength(); ) { // перебираем строки
+            for (i = 0; i < mass.length; i++) { // проходим по всем типам
+                for (j = 0; j < mass[i].getSize(); j++, k++) { // перебираем WordR
                     Node node = docElemNodes.item(k);
                     mass[i].setWordRname(String.valueOf(node.getAttributes().getNamedItem("name")), j);
                 }
             }
         }
 
-        for (DocWord word: mass) {
+        for (DocWord word : mass) {
             System.out.println(word.toString());
         }
 
         System.out.println(
                 "        /////////////////////////////////////////////////////////////////////////////////////////////////////////\n" +
-                "        //                            Здесь начинается подсчет уникальных элементов\n" +
-                "        /////////////////////////////////////////////////////////////////////////////////////////////////////////");
+                        "        //                            Здесь начинается подсчет уникальных элементов\n" +
+                        "        /////////////////////////////////////////////////////////////////////////////////////////////////////////");
 
         for (i = 0; i < mass.length; i++) { // проходим по всем типам
             int hitCounter = 0;
@@ -274,11 +333,8 @@ public class DocumentPDF {
                 for (j = 0; j < mass[i].getSize(); j++) { // перебираем WordR
                     String s = rowElementsToCleaning.get(k);
                     String w = mass[i].getWordRname(j);
-//                    System.out.println(s.contains(w));
-//                    System.out.println(s + " / " + w);
                     if (s.contains(w)) {
                         tempCounter++;
-//                        System.out.println(s + " / " + s.contains(w));
                     }
                 }
                 if (tempCounter > 0)
@@ -289,7 +345,7 @@ public class DocumentPDF {
             mass[i].setValue(hitCounter);
         }
 
-        for (DocWord word: mass) {
+        for (DocWord word : mass) {
             System.out.println(word.toString());
         }
 
@@ -298,43 +354,21 @@ public class DocumentPDF {
 
         System.out.println(
                 "        /////////////////////////////////////////////////////////////////////////////////////////////////////////\n" +
-                "        //                    Здесь начинается вывод количества уникальных элементов в Excel\n" +
-                "        /////////////////////////////////////////////////////////////////////////////////////////////////////////");
-
-
-        // здесь хуйня какая-то произошла, которая крашит сборку
-        // выводим в EXCEL
-//        DocumentEXCEL docEL = new DocumentEXCEL(nameXLSX, nameEndXLSX);
-//        NodeList docElemNodes1 = docElem.getElementsByTagName("Word");
-//        for (i = 0; i < docElemNodes1.getLength(); i++) {
-//            Node DocItem1 = docElemNodes1.item(i);
-//            NamedNodeMap attributes1 = DocItem1.getAttributes();
-//            String nameOWord = null;
-//            String nameWord = attributes1.getNamedItem("name").getNodeValue();
-//            String valueWord = attributes1.getNamedItem("value").getNodeValue();
-//            valueWR = Integer.parseInt(valueWord);
-//            for (j = 0; j < n; j++) {
-//                if (NumDIC.get(j) == valueWR) {
-//                    nameOWord = nameWord;
-//                }
-//            }
-//            if (!(nameOWord == null)) {
-//                docEL.AccountEXCELL(i, nameOWord);
-//            }
-//        }
-//        docEL.UpFormula(totalResult);
-//        docEL.AdditionFinal(totalResult, Bot.NameTZ, Bot.NumTZ);
+                        "        //                    Здесь начинается вывод количества уникальных элементов в Excel\n" +
+                        "        /////////////////////////////////////////////////////////////////////////////////////////////////////////");
 
 
         DocumentEXCEL docEL = new DocumentEXCEL(nameXLSX, nameEndXLSX);
-        for (i = 0; i < mass.length; i++){ // проходимся по всем Word
-           docEL.AccountEXCELL(i, mass[i].getWordName(), mass[i].getValue()); // пишем в Excel
+        for (i = 0; i < mass.length; i++) { // проходимся по всем Word
+            docEL.AccountEXCELL(i, mass[i].getWordName(), mass[i].getValue()); // пишем в Excel
         }
         System.out.println("Записано");
         docEL.UpFormula(totalResult);
         docEL.AdditionFinal(totalResult, Bot.NameTZ, Bot.NumTZ);
 
-    //конец функции SearchTO()
+        System.out.println("document.SearchTO(PDFList,count) - stop");
+        //конец функции SearchTO()
+
     }
 
 
@@ -365,7 +399,7 @@ public class DocumentPDF {
                                           int valueWR,
                                           String nameWordR, // переменная имени типа объекта
                                           String valueWordR, // номер типа объекта
-                                          String pattern){ //паттерн поиска объекта в файле
+                                          String pattern) { //паттерн поиска объекта в файле
         Pattern p = Pattern.compile(pattern);
         for (int j = countLast + 1; j < count; j++) {
             String str = PDFList.get(j);// получаем строку из файла

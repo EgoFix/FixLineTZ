@@ -14,4 +14,6 @@ module com.example.fixlinetz {
     opens com.example.fixlinetz.controllers to javafx.fxml;
     exports com.example.fixlinetz.classes;
     opens com.example.fixlinetz.classes to javafx.fxml;
+    exports com.example.fixlinetz.documents;
+    opens com.example.fixlinetz.documents to javafx.fxml;
 }

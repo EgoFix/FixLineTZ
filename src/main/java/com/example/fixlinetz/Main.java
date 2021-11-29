@@ -1,6 +1,7 @@
 package com.example.fixlinetz;
 
 
+import com.example.fixlinetz.controllers.Controller;
 import com.example.fixlinetz.controllers.ControllerToCheck;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -18,28 +19,36 @@ import java.io.IOException;
 
 
 public class Main extends Application {
+    public static Bot bot = new Bot(); // бот для внешнего хранения вызова методов обработки для всех панелей
+
+    public static Bot getBot() {
+        return bot;
+    }
+
     @Override
-    public void start(Stage stageToCheck) {
+    public void start(Stage primaryStage) {
         try {
-//            BorderPane main_wnd = new BorderPane();
-//            main_wnd = FXMLLoader.load(getClass().getResource("Sample.fxml"));
-//            Scene main_scene = new Scene(main_wnd,350,350);
-//            primaryStage.setTitle("main wind");
-//            primaryStage.setScene(main_scene);
-//            primaryStage.show();
-//            primaryStage.setResizable(false);
+
+            BorderPane main_wnd = new BorderPane();
+            main_wnd = FXMLLoader.load(getClass().getResource("Sample.fxml"));
+            Scene main_scene = new Scene(main_wnd,350,350);
+
+            primaryStage.setTitle("main wind");
+            primaryStage.setScene(main_scene);
+            primaryStage.show();
+            primaryStage.setResizable(false);
 
 
+            System.out.println("\"To check\" Scene started");
+            Stage stageToCheck = new Stage();
+            BorderPane windToCheck = new BorderPane();
+            windToCheck = FXMLLoader.load(getClass().getResource("windToCheck.fxml"));
+            Scene to_check_scene = new Scene(windToCheck, 1280, 800);
 
-            BorderPane wind_to_check = new BorderPane();
-            wind_to_check = FXMLLoader.load(getClass().getResource("wind_to_check.fxml"));
-            Scene to_check_scene = new Scene(wind_to_check,1280,800);
-//            Stage stageToCheck = new Stage();
             stageToCheck.setTitle("wind to check");
             stageToCheck.setScene(to_check_scene);
             stageToCheck.show();
             stageToCheck.setResizable(false);
-
 
 
 
@@ -52,5 +61,4 @@ public class Main extends Application {
         launch(args);
     }
 }
-
 

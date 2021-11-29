@@ -15,7 +15,7 @@ public class DocWord {
      * <pre>
      *  = получение поля name с указанием подтипа объекта
      * </pre>
-     *  </p>
+     * </p>
      */
 
     private String wordName; // имя Word из словаря
@@ -24,7 +24,7 @@ public class DocWord {
     private String[] wordRnames; // имена WordR из словаря в соответствии с Word
 
 
-    DocWord(String wordName, String size, String wordRname, int value, int i){
+    public DocWord(String wordName, String size, String wordRname, int value, int i) {
         setWordName(wordName);
         setSize(size);
         setWordRname(wordRname, i);
@@ -32,7 +32,7 @@ public class DocWord {
     }
 
 
-    public DocWord(String wordName, String size){
+    public DocWord(String wordName, String size) {
         setWordName(wordName);
         setSize(size);
     }
@@ -44,7 +44,9 @@ public class DocWord {
 
 
     public void setWordName(String wordName) {
-        this.wordName = wordName.split("\"")[1];
+        if (wordName.contains("\""))
+            this.wordName = wordName.split("\"")[1];
+        else this.wordName = wordName;
     }
 
 
@@ -54,18 +56,22 @@ public class DocWord {
 
 
     public void setSize(String size) {
-        this.size = Integer.parseInt(size.split("\"")[1]);
+        if (wordName.contains("\""))
+            this.size = Integer.parseInt(size.split("\"")[1]);
+        else this.size = Integer.parseInt(size);
         this.wordRnames = new String[this.size];
     }
 
 
     public String getWordRname(int i) {
-        return wordRnames[i].split("\"")[1];
+        if (wordRnames[i].contains("\""))
+            return wordRnames[i].split("\"")[1];
+        else return wordRnames[i];
     }
 
 
     public void setWordRname(String wordRname, int i) {
-                this.wordRnames[i] = wordRname;
+        this.wordRnames[i] = wordRname;
     }
 
 
