@@ -56,7 +56,7 @@
    <right>
       <TableView fx:id="rightTable" prefHeight="200.0" prefWidth="350.0" BorderPane.alignment="CENTER">
         <columns>
-            <TableColumn maxWidth="50.0" minWidth="20.0" prefWidth="50.0" text="№" />
+            <TableColumn maxWidth="100.0" minWidth="20.0" prefWidth="200.0" text="№" />
           <TableColumn maxWidth="300.0" minWidth="250.0" prefWidth="250.0" text="Объект" />
         </columns>
       </TableView>

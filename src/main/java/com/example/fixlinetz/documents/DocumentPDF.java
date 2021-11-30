@@ -13,6 +13,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import com.example.fixlinetz.Bot;
+import com.example.fixlinetz.Main;
 import com.example.fixlinetz.classes.DocWord;
 import com.example.fixlinetz.controllers.ControllerToCheck;
 import com.example.fixlinetz.documents.DocumentEXCEL;
@@ -37,8 +38,6 @@ public class DocumentPDF {
     //public static String ContentPDF;
     public double totalResult[] = new double[4];
     private int count, countLast, countSave;
-
-    private DocWord mass;
 
     public DocumentPDF(String NamePdf, String NameXlsx, String NameFin) {
         namePDF = NamePdf;
@@ -68,11 +67,9 @@ public class DocumentPDF {
             writer.write(ContentPDF);
             writer.flush();
             writer.close();
-            System.out.println("Запись завершена!");
             randomAccessFile.close();
             pdDoc.close();
 
-            //
 
         } catch (IOException e) {
             //catch
@@ -186,7 +183,7 @@ public class DocumentPDF {
         int valueWR = 0;
         String nameWordR;
         String valueWordR;
-        ArrayList<String> rowElementsToCleaning = new ArrayList<String>(); //пустой массив для строк, которые совпадают по паттерну
+
 
         System.out.println(
                 "        /////////////////////////////////////////////////////////////////////////////////////////////////////////\n" +
@@ -198,9 +195,9 @@ public class DocumentPDF {
             NamedNodeMap attributes = DocItem.getAttributes();
             nameWordR = attributes.getNamedItem("name").getNodeValue(); // получаем родительский элемент по типу (Word)
             valueWordR = attributes.getNamedItem("value").getNodeValue(); // получаем номер типа элемента из родительского (WordR)
-            makeRowElementsToCleaning(PDFList, rowElementsToCleaning, valueWR, nameWordR, valueWordR, "(?i).*?\\b" + nameWordR + "*\\b.*?"); //
+            makeRowElementsToCleaning(PDFList, Main.getRowElementsToCleaning(), valueWR, nameWordR, valueWordR, "(?i).*?\\b" + nameWordR + "*\\b.*?"); //
 
-            makeRowElementsToCleaning(PDFList, rowElementsToCleaning, valueWR, nameWordR, valueWordR, "(?i).*?\\b" + nameWordR + ".№\\b.*?"); //задвижки
+            makeRowElementsToCleaning(PDFList, Main.getRowElementsToCleaning(), valueWR, nameWordR, valueWordR, "(?i).*?\\b" + nameWordR + ".№\\b.*?"); //задвижки
             System.out.println(nameWordR);
             if (!(valueWR == 0)) {
                 NumDIC.add(valueWR);
@@ -208,6 +205,11 @@ public class DocumentPDF {
             }
             valueWR = 0;
         }
+        System.out.println(
+                "        /////////////////////////////////////////////////////////////////////////////////////////////////////////\n" +
+                        "        //              Здесь начинается перенос массива в таблицу на панели\n" +
+                        "        /////////////////////////////////////////////////////////////////////////////////////////////////////////");
+
     }
 
     //ПОИСК ТО
@@ -404,9 +406,7 @@ public class DocumentPDF {
         for (int j = countLast + 1; j < count; j++) {
             String str = PDFList.get(j);// получаем строку из файла
             Matcher m = p.matcher(str);// формируем паттерн
-//            System.out.println(p);
             if (m.find()) {
-                //valueWR = Integer.parseInt(valueWordR); //переводим номер типа элемента в int
                 System.out.println(nameWordR + "--" + j + "--" + valueWordR + "--" + p + "--" + str);
                 rowArray.add(str); // добавляем элементы в массив по паттерну
             }

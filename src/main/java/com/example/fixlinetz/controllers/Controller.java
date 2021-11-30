@@ -34,10 +34,14 @@ public class Controller {
     @FXML
     private Button buttonClose;
 
+    @FXML
+    public void start() {
+        System.out.println("\"Main window\" Scene started");
+    }
 
     @FXML
     public void initialize() {
-        System.out.println("Main window initialized");
+        System.out.println("\"Main window\" Scene initialized");
 
         buttonClose.setOnAction(event -> {
             Stage stage = (Stage) buttonClose.getScene().getWindow();
@@ -83,13 +87,12 @@ public class Controller {
                 System.out.println(str1);
                 System.out.println(str2);
                 System.out.println(str3);
-                //Bot bot = new Bot();
                 try {
 
                     Main.getBot().setNames(str1, str2, str3); // записали названия документов
                     Main.getBot().AlWorkBot(); // запускаем обработку PDF
 
-                    System.out.println("Обработка файлов завершена");
+                    System.out.println("Controller - processing stopped\n");
                 } catch (ParserConfigurationException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();

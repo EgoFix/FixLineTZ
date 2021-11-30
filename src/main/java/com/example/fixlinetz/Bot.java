@@ -57,6 +57,7 @@ public class Bot {
         this.document.WithoutTESS(); // создает текстовый файл в котором все данные из pdf-ки
         this.document.SearchTrials(PDFList); // ищет испытания, при нахождении выводит строку и испытание
         //this.document.SearchTOCheck(PDFList, count); // ищет технологические объекты и выводит при совпадении со словарем
+        System.out.println("Main.getBot().AlWorkBot() - stop");
     }
 
 }

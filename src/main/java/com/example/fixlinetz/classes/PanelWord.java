@@ -25,6 +25,7 @@ public class PanelWord {
         this.text = new SimpleStringProperty(text);
     }
 
+
     public String getNum() {
         return num.get();
     }
