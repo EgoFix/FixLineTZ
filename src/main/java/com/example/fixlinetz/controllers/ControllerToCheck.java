@@ -7,10 +7,12 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTreeCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import org.xml.sax.SAXException;
 
@@ -35,6 +37,7 @@ public class ControllerToCheck extends Application {
     Stage stage;
 
     private ObservableList<PanelWord> checkedArray = FXCollections.observableArrayList();
+    CheckBoxTreeItem<PanelWord> leftViewRoot;
 
     /////////////////////////////////////////////////////////////////////////////////////////
     ////                    Методы wind_to_check
@@ -51,9 +54,12 @@ public class ControllerToCheck extends Application {
         return leftView;
     }
 
+    public Button getUpperPaneButton1(){return upperPaneButton1;}
+
     @Override
     public void start(Stage stageToCheck) throws Exception {
         System.out.println("\"To check\" Scene started");
+        upperPaneButton1.setStyle("-fx-background-color: #808080");
     }
 
     @FXML
@@ -64,6 +70,8 @@ public class ControllerToCheck extends Application {
         ////                            SearchTOCheck button
         /////////////////////////////////////////////////////////////////////////////////////////
         upperPaneButton1.setOnAction(event -> {
+            leftViewRoot = new CheckBoxTreeItem<PanelWord>(new PanelWord("№ ", " Объект"));;
+            leftView.setRoot(leftViewRoot);
             System.out.println("upperPaneButton1");
             try {
                 Main.getBot().document.SearchTOCheck(Main.getBot().PDFList, Main.getBot().count);
@@ -82,24 +90,29 @@ public class ControllerToCheck extends Application {
         /////////////////////////////////////////////////////////////////////////////////////////
         ////                  button to transfer data from leftView to rightTable
         /////////////////////////////////////////////////////////////////////////////////////////
-        transferButton.setOnMouseClicked(ButtonEvent -> {
-//            System.out.println("transferButton");
-//            System.out.println(checkedArray.toString());
-            rightTable.setItems(checkedArray);
-
+//        transferButton.setOnMouseClicked(ButtonEvent -> {
+////            System.out.println("transferButton");
+////            System.out.println(checkedArray.toString());
+//
+//
+//        });
+        transferButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                rightTable.setItems(checkedArray);
+//                checkedArray.clear();
+            }
         });
-
         /////////////////////////////////////////////////////////////////////////////////////////
         ////                    Собираем leftView для сырого массива
         /////////////////////////////////////////////////////////////////////////////////////////
         // устанавливаем рут
-        PanelWord pan = new PanelWord("№ ", " Объект");
         leftView.setCellFactory(CheckBoxTreeCell.<PanelWord>forTreeView());
-        CheckBoxTreeItem<PanelWord> root = new CheckBoxTreeItem<PanelWord>(pan);
-        leftView.setRoot(root);
+        leftViewRoot = new CheckBoxTreeItem<PanelWord>(new PanelWord("№ ", " Объект"));
+        leftView.setRoot(leftViewRoot);
 
         // обработчик выбранных элементов для добавления в массив
-        root.addEventHandler(CheckBoxTreeItem.checkBoxSelectionChangedEvent(), (CheckBoxTreeItem.TreeModificationEvent<PanelWord> evt) -> {
+        leftViewRoot.addEventHandler(CheckBoxTreeItem.checkBoxSelectionChangedEvent(), (CheckBoxTreeItem.TreeModificationEvent<PanelWord> evt) -> {
             CheckBoxTreeItem<PanelWord> item = evt.getTreeItem();
 
             if (evt.wasIndeterminateChanged()) {
@@ -161,3 +174,9 @@ public class ControllerToCheck extends Application {
 
 // TODO: 02.12.2021 Нужно сделать так чтобы при добавлении элемента в правую таблицу происходила проверка на тип объекта,
 //  записывалось кол-во объектов как рут ветка и в нее добавлялись уже строки которые подходят под этот тип
+
+// TODO: 02.12.2021 Нужно добавить обработку другого файла без перекомпиляции
+
+// TODO: 02.12.2021 Нужно добавить перекидывание в эксельку
+
+// TODO: 02.12.2021 Нужно добавить отображение инфы во время обработки PDF

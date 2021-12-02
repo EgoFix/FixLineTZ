@@ -18,6 +18,8 @@ public class Main extends Application {
 
     public static ArrayList<String> getRowElementsToCleaning(){return rowElementsToCleaning;}
 
+    public static void clearRowElementsToCleaning(){ rowElementsToCleaning.clear();};
+
     public static ControllerToCheck getToCheck() {
         return toCheck;
     }

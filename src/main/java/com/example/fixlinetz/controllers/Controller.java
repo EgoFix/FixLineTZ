@@ -41,11 +41,15 @@ public class Controller {
 
     @FXML
     public void initialize() {
+        buttonClose.setStyle("-fx-background-color: #B22222");
+        buttonStart.setStyle("-fx-background-color: #00ff00");
+
         System.out.println("\"Main window\" Scene initialized");
 
         buttonClose.setOnAction(event -> {
             Stage stage = (Stage) buttonClose.getScene().getWindow();
             stage.close();
+
         });
         buttonReview1.setOnAction(event -> {
             final FileChooser fileChooser = new FileChooser();
@@ -77,7 +81,8 @@ public class Controller {
 
 
         buttonStart.setOnAction(event -> {
-
+            Main.clearRowElementsToCleaning();
+            buttonStart.setStyle("-fx-background-color: #00ff00");
             String str1 = textReview1.getText();//pdf
             String str2 = textReview2.getText();//input
             String str3 = textReview3.getText();//output
@@ -93,6 +98,8 @@ public class Controller {
                     Main.getBot().AlWorkBot(); // запускаем обработку PDF
 
                     System.out.println("Controller - processing stopped\n");
+                    buttonStart.setStyle("-fx-background-color: #808080");
+                    Main.getToCheck().getUpperPaneButton1().setStyle("-fx-background-color: #00ff00");
                 } catch (ParserConfigurationException e) {
                     //
                     e.printStackTrace();
