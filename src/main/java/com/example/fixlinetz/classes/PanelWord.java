@@ -1,44 +1,36 @@
 package com.example.fixlinetz.classes;
 
-import javafx.beans.property.SimpleStringProperty;
 
 public class PanelWord {
-    private SimpleStringProperty num;
-    private SimpleStringProperty text;
+    private String num;
+    private String text;
 
-    public SimpleStringProperty numProperty() {
-        if (num == null) {
-            num = new SimpleStringProperty(this, "num");
-        }
-        return num;
-    }
-
-    public SimpleStringProperty textProperty() {
-        if (text == null) {
-            text = new SimpleStringProperty(this, "text");
-        }
-        return text;
-    }
 
     public PanelWord(String num, String text){
-        this.num = new SimpleStringProperty(num);
-        this.text = new SimpleStringProperty(text);
+        this.num = num;
+        this.text = text;
     }
+
 
 
     public String getNum() {
-        return num.get();
+        return num;
     }
 
     public void setNum(String num) {
-        this.num.set(num);
+        this.num = num;
     }
 
     public String getText() {
-        return text.get();
+        return text;
     }
 
     public void setText(String text) {
-        this.text.set(text);
+        this.text = text;
+    }
+
+    @Override
+    public String toString() {
+        return num + " - " + text;
     }
 }

@@ -43,7 +43,7 @@ public class Main extends Application {
             Stage stageToCheck = new Stage();
             BorderPane windToCheck = new BorderPane();
             windToCheck = FXMLLoader.load(getClass().getResource("windToCheck.fxml"));
-            Scene to_check_scene = new Scene(windToCheck, 1280, 800);
+            Scene to_check_scene = new Scene(windToCheck, 1536, 800);
 
             stageToCheck.setTitle("wind to check");
             stageToCheck.setScene(to_check_scene);

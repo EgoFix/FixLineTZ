@@ -94,13 +94,13 @@ public class Controller {
 
                     System.out.println("Controller - processing stopped\n");
                 } catch (ParserConfigurationException e) {
-                    // TODO Auto-generated catch block
+                    //
                     e.printStackTrace();
                 } catch (SAXException e) {
-                    // TODO Auto-generated catch block
+                    //
                     e.printStackTrace();
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
+                    //
                     e.printStackTrace();
                 }
             }
