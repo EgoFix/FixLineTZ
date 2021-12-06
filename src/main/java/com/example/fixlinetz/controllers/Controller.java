@@ -95,11 +95,10 @@ public class Controller {
                 try {
 
                     Main.getBot().setNames(str1, str2, str3); // записали названия документов
-                    Main.getBot().AlWorkBot(); // запускаем обработку PDF
-
-                    System.out.println("Controller - processing stopped\n");
                     buttonStart.setStyle("-fx-background-color: #808080");
-                    Main.getToCheck().getUpperPaneButton1().setStyle("-fx-background-color: #00ff00");
+                    Main.getBot().AlWorkBot(); // запускаем обработку PDF
+                    buttonStart.setStyle("-fx-background-color: #00ff00");
+                    System.out.println("Controller - processing stopped\n");
                 } catch (ParserConfigurationException e) {
                     //
                     e.printStackTrace();

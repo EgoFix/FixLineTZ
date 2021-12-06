@@ -5,9 +5,10 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="350.0" prefWidth="350.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.fixlinetz.controllers.Controller">
+<BorderPane prefHeight="350.0" prefWidth="350.0" xmlns="http://javafx.com/javafx/15" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.fixlinetz.controllers.Controller">
    <center>
       <Pane prefHeight="283.0" prefWidth="350.0" style="-fx-background-color: #5476bf;" BorderPane.alignment="CENTER">
          <children>
@@ -34,6 +35,7 @@
             </Pane>
             <Button fx:id="buttonStart" layoutX="92.0" layoutY="239.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="78.0" style="-fx-background-radius: 8;" text="Начать" />
             <Button fx:id="buttonClose" layoutX="180.0" layoutY="239.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="78.0" style="-fx-background-radius: 8;" text="Выход" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="36.0" layoutX="60.0" layoutY="233.0" stroke="BLACK" strokeType="INSIDE" width="6.0" />
          </children>
       </Pane>
    </center>

@@ -38,7 +38,6 @@ public class Main extends Application {
 
             primaryStage.setTitle("main wind");
             primaryStage.setScene(main_scene);
-            primaryStage.show();
             primaryStage.setResizable(false);
 
 
@@ -49,9 +48,11 @@ public class Main extends Application {
 
             stageToCheck.setTitle("wind to check");
             stageToCheck.setScene(to_check_scene);
-            stageToCheck.show();
             stageToCheck.setResizable(false);
             toCheck.setStage(stageToCheck);
+
+            stageToCheck.show();
+            primaryStage.show();
 
 
         } catch (Exception e) {

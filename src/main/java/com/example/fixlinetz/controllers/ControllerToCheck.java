@@ -18,6 +18,7 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
+import java.util.ArrayList;
 
 
 public class ControllerToCheck extends Application {
@@ -33,6 +34,7 @@ public class ControllerToCheck extends Application {
     private Button upperPaneButton1;
     @FXML
     private Button transferButton;
+
 
     Stage stage;
 
@@ -54,7 +56,9 @@ public class ControllerToCheck extends Application {
         return leftView;
     }
 
-    public Button getUpperPaneButton1(){return upperPaneButton1;}
+    public Button getUpperPaneButton1() {
+        return upperPaneButton1;
+    }
 
     @Override
     public void start(Stage stageToCheck) throws Exception {
@@ -70,8 +74,7 @@ public class ControllerToCheck extends Application {
         ////                            SearchTOCheck button
         /////////////////////////////////////////////////////////////////////////////////////////
         upperPaneButton1.setOnAction(event -> {
-            leftViewRoot = new CheckBoxTreeItem<PanelWord>(new PanelWord("№ ", " Объект"));;
-            leftView.setRoot(leftViewRoot);
+
             System.out.println("upperPaneButton1");
             try {
                 Main.getBot().document.SearchTOCheck(Main.getBot().PDFList, Main.getBot().count);
@@ -90,29 +93,33 @@ public class ControllerToCheck extends Application {
         /////////////////////////////////////////////////////////////////////////////////////////
         ////                  button to transfer data from leftView to rightTable
         /////////////////////////////////////////////////////////////////////////////////////////
-//        transferButton.setOnMouseClicked(ButtonEvent -> {
-////            System.out.println("transferButton");
-////            System.out.println(checkedArray.toString());
-//
-//
-//        });
+
         transferButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+
             @Override
             public void handle(MouseEvent mouseEvent) {
-                rightTable.setItems(checkedArray);
-//                checkedArray.clear();
+                ObservableList<PanelWord> temp = FXCollections.observableArrayList();
+
+                // обертка для передачи элементов в таблицу по значению
+                Integer num = 0;
+                for (PanelWord tempItem : checkedArray) {
+                    temp.add(num, tempItem);
+                    num++;
+                }
+                rightTable.setItems(temp);
             }
         });
         /////////////////////////////////////////////////////////////////////////////////////////
         ////                    Собираем leftView для сырого массива
         /////////////////////////////////////////////////////////////////////////////////////////
         // устанавливаем рут
+        PanelWord pan = new PanelWord("№ ", " Объект");
         leftView.setCellFactory(CheckBoxTreeCell.<PanelWord>forTreeView());
-        leftViewRoot = new CheckBoxTreeItem<PanelWord>(new PanelWord("№ ", " Объект"));
-        leftView.setRoot(leftViewRoot);
+        CheckBoxTreeItem<PanelWord> root = new CheckBoxTreeItem<PanelWord>(pan);
+        leftView.setRoot(root);
 
         // обработчик выбранных элементов для добавления в массив
-        leftViewRoot.addEventHandler(CheckBoxTreeItem.checkBoxSelectionChangedEvent(), (CheckBoxTreeItem.TreeModificationEvent<PanelWord> evt) -> {
+        root.addEventHandler(CheckBoxTreeItem.checkBoxSelectionChangedEvent(), (CheckBoxTreeItem.TreeModificationEvent<PanelWord> evt) -> {
             CheckBoxTreeItem<PanelWord> item = evt.getTreeItem();
 
             if (evt.wasIndeterminateChanged()) {
@@ -179,4 +186,4 @@ public class ControllerToCheck extends Application {
 
 // TODO: 02.12.2021 Нужно добавить перекидывание в эксельку
 
-// TODO: 02.12.2021 Нужно добавить отображение инфы во время обработки PDF
+// TODO: 02.12.2021 Нужно добавить отображение инфы во время обработки PDF+

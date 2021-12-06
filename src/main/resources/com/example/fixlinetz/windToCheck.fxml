@@ -2,8 +2,8 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.BorderPane?>
@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane id="main_pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1536.0" xmlns="http://javafx.com/javafx/11.0.1w" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.fixlinetz.controllers.ControllerToCheck">
+<BorderPane id="main_pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1536.0" xmlns="http://javafx.com/javafx/15" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.fixlinetz.controllers.ControllerToCheck">
    <top>
       <Pane id="upper_pane" prefHeight="40.0" prefWidth="600.0" style="-fx-background-color: #284073;" BorderPane.alignment="CENTER">
          <children>
@@ -48,7 +48,7 @@
                      <children>
                         <HBox prefHeight="500.0" prefWidth="821.0">
                            <children>
-                              <Button fx:id="transferButton" graphicTextGap="2.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="400.0" text="Перенести строку">
+                              <Button fx:id="transferButton" graphicTextGap="2.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="400.0" text="Перенести в таблицу">
                                  <font>
                                     <Font size="24.0" />
                                  </font>
