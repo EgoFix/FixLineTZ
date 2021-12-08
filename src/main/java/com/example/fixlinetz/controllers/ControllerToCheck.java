@@ -83,10 +83,38 @@ public class ControllerToCheck extends Application {
         System.out.println("\"To check\" Scene initialized");
 
         /////////////////////////////////////////////////////////////////////////////////////////
-        ////                            SearchTOCheck button
+        ////                    Собираем leftView для сырого массива
         /////////////////////////////////////////////////////////////////////////////////////////
+        // устанавливаем рут
+        PanelWord pan = new PanelWord("№ ", " Объект");
+        leftView.setCellFactory(CheckBoxTreeCell.<PanelWord>forTreeView());
+        CheckBoxTreeItem<PanelWord> root = new CheckBoxTreeItem<PanelWord>(pan);
+        leftView.setRoot(root);
+
+        // обработчик выбранных элементов для добавления в массив
+        root.addEventHandler(CheckBoxTreeItem.checkBoxSelectionChangedEvent(), (CheckBoxTreeItem.TreeModificationEvent<PanelWord> evt) -> {
+            CheckBoxTreeItem<PanelWord> item = evt.getTreeItem();
+
+            if (evt.wasIndeterminateChanged()) {
+                if (item.isIndeterminate()) {
+                    checkedArray.remove(item.getValue());
+                } else if (item.isSelected()) {
+                    checkedArray.add(item.getValue());
+                }
+            } else if (evt.wasSelectionChanged()) {
+                if (item.isSelected()) {
+                    checkedArray.add(item.getValue());
+                } else {
+                    checkedArray.remove(item.getValue());
+                }
+            }
+        });
+
+
         upperPaneButton1.setOnAction(event -> {
 
+            if (leftViewRoot != null)
+                leftViewRoot.getChildren().clear();
 
             System.out.println("upperPaneButton1");
 
@@ -103,10 +131,6 @@ public class ControllerToCheck extends Application {
                 setLeftView(i, Main.getRowElementsToCleaning().get(i));
             }
         });
-
-        /////////////////////////////////////////////////////////////////////////////////////////
-        ////                  button to transfer data from leftView to rightTable
-        /////////////////////////////////////////////////////////////////////////////////////////
 
         transferButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
 
@@ -163,7 +187,7 @@ public class ControllerToCheck extends Application {
                 Element docElem = document.getDocumentElement(); // получаем тип Word из словаря
                 NodeList docElemNodes = docElem.getElementsByTagName("WordR"); // заполняем docElemNodes полями словаря name/value по тегу WordR
 
-                int i,j,k;
+                int i, j, k;
 
                 System.out.println(
                         "        /////////////////////////////////////////////////////////////////////////////////////////////////////////\n" +
@@ -263,61 +287,18 @@ public class ControllerToCheck extends Application {
 
 
 
-        /////////////////////////////////////////////////////////////////////////////////////////
-        ////                    Собираем leftView для сырого массива
-        /////////////////////////////////////////////////////////////////////////////////////////
-        // устанавливаем рут
-        PanelWord pan = new PanelWord("№ ", " Объект");
-        leftView.setCellFactory(CheckBoxTreeCell.<PanelWord>forTreeView());
-        CheckBoxTreeItem<PanelWord> root = new CheckBoxTreeItem<PanelWord>(pan);
-        leftView.setRoot(root);
-
-        // обработчик выбранных элементов для добавления в массив
-        root.addEventHandler(CheckBoxTreeItem.checkBoxSelectionChangedEvent(), (CheckBoxTreeItem.TreeModificationEvent<PanelWord> evt) -> {
-            CheckBoxTreeItem<PanelWord> item = evt.getTreeItem();
-
-            if (evt.wasIndeterminateChanged()) {
-                if (item.isIndeterminate()) {
-                    checkedArray.remove(item.getValue());
-                } else if (item.isSelected()) {
-                    checkedArray.add(item.getValue());
-                }
-            } else if (evt.wasSelectionChanged()) {
-                if (item.isSelected()) {
-                    checkedArray.add(item.getValue());
-                } else {
-                    checkedArray.remove(item.getValue());
-                }
-            }
-        });
-
-//        /////////////////////////////////////////////////////////////////////////////////////////
-//        ////                    Собираем rightTable из выборки пользователя
-//        /////////////////////////////////////////////////////////////////////////////////////////
-//        // столбец для вывода номера
-//        TableColumn<PanelWord, String> numColumn = new TableColumn<>("№");
-//
-//        numColumn.setCellValueFactory(new PropertyValueFactory<>("num"));
-//        rightTable.getColumns().add(numColumn);
-//
-//        // столбец для вывода объекта
-//        TableColumn<PanelWord, String> ObjColumn = new TableColumn<>("Объект");
-//        ObjColumn.setCellValueFactory(new PropertyValueFactory<>("text"));
-//        rightTable.getColumns().add(ObjColumn);
-
 
         // initialize() finish
     }
-    // TODO: 29.11.2021 ПРИ ПЕРЕНОСЕ СТРОКИ из ЛЕВОЙ таблицы в правую - нужно анализировать строку и
-    //  РАСПРЕДЕЛЯТЬ ПО ТИПАМ объектов строки в ПРАВОЙ таблице
 
-    /////////////////////////////////////////////////////////////////////////////////////////
-    ////                    Функция для записи строки в leftView
-    /////////////////////////////////////////////////////////////////////////////////////////
     public void setLeftView(int i, String text) {
+        /////////////////////////////////////////////////////////////////////////////////////////
+        ////                    Функция для записи строки в leftView
+        /////////////////////////////////////////////////////////////////////////////////////////
         PanelWord panelWord = new PanelWord(Integer.toString(i), text);
         CheckBoxTreeItem<PanelWord> treeItem = new CheckBoxTreeItem<>(panelWord);
         leftView.getRoot().getChildren().add(treeItem);
+
     }
 
     public static void main(String[] args) {
@@ -327,11 +308,15 @@ public class ControllerToCheck extends Application {
     // ControllerToCheck finish
 }
 
-// TODO: 02.12.2021 Нужно сделать так чтобы при добавлении элемента в правую таблицу происходила проверка на тип объекта,
-//  записывалось кол-во объектов как рут ветка и в нее добавлялись уже строки которые подходят под этот тип
+// TODO: 29.11.2021 ПРИ ПЕРЕНОСЕ СТРОКИ из ЛЕВОЙ таблицы в правую - нужно анализировать строку и
+//  РАСПРЕДЕЛЯТЬ ПО ТИПАМ объектов строки в ПРАВОЙ таблице+
+
+// TODO: 02.12.2021 Подсчет объектов+
+
+// TODO: 02.12.2021 Нужно добавить отображение инфы во время обработки PDF+
 
 // TODO: 02.12.2021 Нужно добавить обработку другого файла без перекомпиляции
 
 // TODO: 02.12.2021 Нужно добавить перекидывание в эксельку
 
-// TODO: 02.12.2021 Нужно добавить отображение инфы во время обработки PDF+
+// FIXME: 08-Dec-21 pattern matching

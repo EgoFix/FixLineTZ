@@ -45,7 +45,7 @@
                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
-                              <Button fx:id="transferButton" graphicTextGap="2.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="400.0" text="Перенести строку">
+                              <Button fx:id="transferButton" graphicTextGap="2.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="400.0" text="Перенести строки">
                                  <font>
                                     <Font size="16.0" />
                                  </font>
