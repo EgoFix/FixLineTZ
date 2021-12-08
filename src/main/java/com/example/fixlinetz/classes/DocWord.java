@@ -56,7 +56,7 @@ public class DocWord {
 
 
     public void setSize(String size) {
-        if (wordName.contains("\""))
+        if (size.contains("\""))
             this.size = Integer.parseInt(size.split("\"")[1]);
         else this.size = Integer.parseInt(size);
         this.wordRnames = new String[this.size];

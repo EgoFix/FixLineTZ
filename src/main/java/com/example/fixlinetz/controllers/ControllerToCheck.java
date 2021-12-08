@@ -1,6 +1,7 @@
 package com.example.fixlinetz.controllers;
 
 import com.example.fixlinetz.Main;
+import com.example.fixlinetz.classes.DocWord;
 import com.example.fixlinetz.classes.PanelWord;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
@@ -14,9 +15,16 @@ import javafx.scene.control.cell.CheckBoxTreeCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -34,6 +42,8 @@ public class ControllerToCheck extends Application {
     private Button upperPaneButton1;
     @FXML
     private Button transferButton;
+    @FXML
+    private Button saveToExcelButton;
 
 
     Stage stage;
@@ -107,6 +117,100 @@ public class ControllerToCheck extends Application {
                     num++;
                 }
                 rightTable.setItems(temp);
+            }
+        });
+
+        saveToExcelButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+
+                DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+                DocumentBuilder builder = null; // получили билдер, который парсит XML и создает структуру документа
+                try {
+                    builder = factory.newDocumentBuilder();
+                } catch (ParserConfigurationException e) {
+                    e.printStackTrace();
+                }
+                Document document = null; // запарсили XML, создав структуру Document
+                try {
+                    document = builder.parse(new File("dictionary.xml"));
+                } catch (SAXException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Element docElem = document.getDocumentElement(); // получаем тип Word из словаря
+                NodeList docElemNodes = docElem.getElementsByTagName("WordR"); // заполняем docElemNodes полями словаря name/value по тегу WordR
+
+                int i,j,k;
+
+                System.out.println(
+                        "        /////////////////////////////////////////////////////////////////////////////////////////////////////////\n" +
+                                "        //                              Здесь начинается обработка по типу Word\n" +
+                                "        /////////////////////////////////////////////////////////////////////////////////////////////////////////");
+
+                docElemNodes = docElem.getElementsByTagName("Word"); // получаем только типы (Word)
+                System.out.println("docElemNodes.getLength = " + docElemNodes.getLength());
+                DocWord[] mass = new DocWord[docElemNodes.getLength()];
+
+                for (i = 0; i < docElemNodes.getLength(); i++) {
+                    Node node = docElemNodes.item(i);
+                    System.out.println("Найден элемент: " + node.getAttributes().getNamedItem("name") + ", его атрибут: " + node.getAttributes().getNamedItem("size"));
+
+                    // формируем массив типа DocWord для формирования рабочего словаря, записываем параметры первого уровня
+                    mass[i] = new DocWord(String.valueOf(node.getAttributes().getNamedItem("name")),
+                            String.valueOf(node.getAttributes().getNamedItem("size")));
+                }
+                System.out.println("mass.length = " + mass.length);
+
+                for (DocWord word : mass) {
+                    System.out.println(word.toString());
+                }
+
+                System.out.println(
+                        "        /////////////////////////////////////////////////////////////////////////////////////////////////////////\n" +
+                                "        //                              Здесь начинается обработка по типу WordR\n" +
+                                "        /////////////////////////////////////////////////////////////////////////////////////////////////////////");
+
+                docElemNodes = docElem.getElementsByTagName("WordR"); // получаем только типы (Word)
+                System.out.println("docElemNodes.getLength =  " + docElemNodes.getLength());
+
+                for (k = 0; k < docElemNodes.getLength(); ) { // перебираем строки
+                    for (i = 0; i < mass.length; i++) { // проходим по всем типам
+                        for (j = 0; j < mass[i].getSize(); j++, k++) { // перебираем WordR
+                            Node node = docElemNodes.item(k);
+                            mass[i].setWordRname(String.valueOf(node.getAttributes().getNamedItem("name")), j);
+                        }
+                    }
+                }
+
+                for (DocWord word : mass) {
+                    System.out.println(word.toString());
+                }
+
+//                System.out.println(
+//                        "        /////////////////////////////////////////////////////////////////////////////////////////////////////////\n" +
+//                                "        //                            Здесь начинается подсчет уникальных элементов\n" +
+//                                "        /////////////////////////////////////////////////////////////////////////////////////////////////////////");
+//
+//                for (i = 0; i < mass.length; i++) { // проходим по всем типам
+//                    int hitCounter = 0;
+//                    for (k = 0; k < checkedArray.size(); k++) { // перебираем строки
+//                        int tempCounter = 0;
+//                        for (j = 0; j < mass[i].getSize(); j++) { // перебираем WordR
+//                            String s = checkedArray.get(k).getText();
+//                            String w = mass[i].getWordRname(j);
+//                            if (s.contains(w)) {
+//                                tempCounter++;
+//                            }
+//                        }
+//                        if (tempCounter > 0)
+//                            hitCounter++;
+//                    }
+//                    // выводим количество элементов в соответствии с их типом
+////            System.out.println("mass[" + (i + 1) + "] " + mass[i].getWordName() + " hitCounter = " + hitCounter);
+//                    mass[i].setValue(hitCounter);
+//                }
             }
         });
         /////////////////////////////////////////////////////////////////////////////////////////
