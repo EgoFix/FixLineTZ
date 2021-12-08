@@ -11,7 +11,7 @@
          <children>
             <HBox prefHeight="42.0" prefWidth="600.0">
                <children>
-                  <Button fx:id="upperPaneButton1" mnemonicParsing="false" prefHeight="50.0" prefWidth="165.0" text="SearchTOCheck" />
+                  <Button fx:id="upperPaneButton1" mnemonicParsing="false" prefHeight="50.0" prefWidth="165.0" text="Отобразить объекты" />
                </children>
             </HBox>
          </children>
@@ -50,7 +50,12 @@
                                     <Font size="16.0" />
                                  </font>
                               </Button>
-                              <Button fx:id="saveToExcelButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="400.0" text="Сохранить в Excel" GridPane.columnIndex="1">
+                              <Button fx:id="saveToExcelButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="400.0" text="Сохранить в Excel" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </Button>
+                              <Button fx:id="calcButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="400.0" text="Подсчитать объекты" GridPane.columnIndex="1">
                                  <font>
                                     <Font size="16.0" />
                                  </font>

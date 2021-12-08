@@ -43,6 +43,8 @@ public class ControllerToCheck extends Application {
     @FXML
     private Button transferButton;
     @FXML
+    private Button calcButton;
+    @FXML
     private Button saveToExcelButton;
 
 
@@ -85,7 +87,9 @@ public class ControllerToCheck extends Application {
         /////////////////////////////////////////////////////////////////////////////////////////
         upperPaneButton1.setOnAction(event -> {
 
+
             System.out.println("upperPaneButton1");
+
             try {
                 Main.getBot().document.SearchTOCheck(Main.getBot().PDFList, Main.getBot().count);
             } catch (ParserConfigurationException e) {
@@ -108,6 +112,23 @@ public class ControllerToCheck extends Application {
 
             @Override
             public void handle(MouseEvent mouseEvent) {
+
+
+                /////////////////////////////////////////////////////////////////////////////////////////
+                ////                    Собираем rightTable из выборки пользователя
+                /////////////////////////////////////////////////////////////////////////////////////////
+                rightTable.getItems().clear(); // чистим таблицу
+                rightTable.getColumns().clear(); // чистим столбцы
+                // столбец для вывода номера
+                TableColumn<PanelWord, String> numColumn = new TableColumn<>("№");
+
+                numColumn.setCellValueFactory(new PropertyValueFactory<>("num"));
+                rightTable.getColumns().add(numColumn);
+                // столбец для вывода объекта
+                TableColumn<PanelWord, String> ObjColumn = new TableColumn<>("Объект");
+                ObjColumn.setCellValueFactory(new PropertyValueFactory<>("text"));
+                rightTable.getColumns().add(ObjColumn);
+
                 ObservableList<PanelWord> temp = FXCollections.observableArrayList();
 
                 // обертка для передачи элементов в таблицу по значению
@@ -120,7 +141,7 @@ public class ControllerToCheck extends Application {
             }
         });
 
-        saveToExcelButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+        calcButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
 
@@ -184,35 +205,64 @@ public class ControllerToCheck extends Application {
                     }
                 }
 
-                for (DocWord word : mass) {
-                    System.out.println(word.toString());
+//                for (DocWord word : mass) {
+//                    System.out.println(word.toString());
+//                }
+
+                System.out.println(
+                        "        /////////////////////////////////////////////////////////////////////////////////////////////////////////\n" +
+                                "        //                            Здесь начинается подсчет уникальных элементов\n" +
+                                "        /////////////////////////////////////////////////////////////////////////////////////////////////////////");
+
+                for (i = 0; i < mass.length; i++) { // проходим по всем типам
+                    int hitCounter = 0;
+                    for (k = 0; k < checkedArray.size(); k++) { // перебираем строки
+                        int tempCounter = 0;
+                        for (j = 0; j < mass[i].getSize(); j++) { // перебираем WordR
+                            String s = checkedArray.get(k).getText();
+                            String w = mass[i].getWordRname(j);
+                            if (s.contains(w)) {
+                                tempCounter++;
+                            }
+                        }
+                        if (tempCounter > 0)
+                            hitCounter++;
+                    }
+                    // выводим количество элементов в соответствии с их типом
+//            System.out.println("mass[" + (i + 1) + "] " + mass[i].getWordName() + " hitCounter = " + hitCounter);
+                    mass[i].setValue(hitCounter);
                 }
 
-//                System.out.println(
-//                        "        /////////////////////////////////////////////////////////////////////////////////////////////////////////\n" +
-//                                "        //                            Здесь начинается подсчет уникальных элементов\n" +
-//                                "        /////////////////////////////////////////////////////////////////////////////////////////////////////////");
-//
-//                for (i = 0; i < mass.length; i++) { // проходим по всем типам
-//                    int hitCounter = 0;
-//                    for (k = 0; k < checkedArray.size(); k++) { // перебираем строки
-//                        int tempCounter = 0;
-//                        for (j = 0; j < mass[i].getSize(); j++) { // перебираем WordR
-//                            String s = checkedArray.get(k).getText();
-//                            String w = mass[i].getWordRname(j);
-//                            if (s.contains(w)) {
-//                                tempCounter++;
-//                            }
-//                        }
-//                        if (tempCounter > 0)
-//                            hitCounter++;
-//                    }
-//                    // выводим количество элементов в соответствии с их типом
-////            System.out.println("mass[" + (i + 1) + "] " + mass[i].getWordName() + " hitCounter = " + hitCounter);
-//                    mass[i].setValue(hitCounter);
-//                }
+                // выводим инфу о кол-ве элементов
+                rightTable.getItems().clear(); // чистим таблицу
+                rightTable.getColumns().clear(); // чистим столбцы
+
+                /////////////////////////////////////////////////////////////////////////////////////////
+                ////                    Собираем rightTable из выборки пользователя
+                /////////////////////////////////////////////////////////////////////////////////////////
+                // столбец для вывода типа
+                TableColumn<DocWord, String> wordColumn = new TableColumn<>("Тип");
+                wordColumn.setCellValueFactory(new PropertyValueFactory<>("wordName"));
+                rightTable.getColumns().add(wordColumn);
+
+                // столбец для вывода кол-ва
+                TableColumn<DocWord, Integer> HintColumn = new TableColumn<>("Количество");
+                HintColumn.setCellValueFactory(new PropertyValueFactory<>("value"));
+                rightTable.getColumns().add(HintColumn);
+
+                ObservableList<DocWord> temp = FXCollections.observableArrayList();
+                // обертка для передачи элементов в таблицу по значению
+                Integer num = 0;
+                for (DocWord tempItem : mass) {
+                    temp.add(num, tempItem);
+                    num++;
+                }
+                rightTable.setItems(temp);
             }
         });
+
+
+
         /////////////////////////////////////////////////////////////////////////////////////////
         ////                    Собираем leftView для сырого массива
         /////////////////////////////////////////////////////////////////////////////////////////
@@ -241,25 +291,19 @@ public class ControllerToCheck extends Application {
             }
         });
 
-        /////////////////////////////////////////////////////////////////////////////////////////
-        ////                    Собираем rightTable из выборки пользователя
-        /////////////////////////////////////////////////////////////////////////////////////////
-        // столбец для вывода имени
-        TableColumn<PanelWord, String> numColumn = new TableColumn<>("№");
-
-        numColumn.setCellValueFactory(new PropertyValueFactory<>("num"));
-        numColumn.setMinWidth(20);
-        numColumn.setMaxWidth(100);
-        numColumn.setPrefWidth(200);
-        rightTable.getColumns().add(numColumn);
-
-        // столбец для вывода возраста
-        TableColumn<PanelWord, String> ObjColumn = new TableColumn<>("Объект");
-        ObjColumn.setCellValueFactory(new PropertyValueFactory<>("text"));
-        ObjColumn.setMinWidth(250);
-        ObjColumn.setMaxWidth(300);
-        ObjColumn.setPrefWidth(250);
-        rightTable.getColumns().add(ObjColumn);
+//        /////////////////////////////////////////////////////////////////////////////////////////
+//        ////                    Собираем rightTable из выборки пользователя
+//        /////////////////////////////////////////////////////////////////////////////////////////
+//        // столбец для вывода номера
+//        TableColumn<PanelWord, String> numColumn = new TableColumn<>("№");
+//
+//        numColumn.setCellValueFactory(new PropertyValueFactory<>("num"));
+//        rightTable.getColumns().add(numColumn);
+//
+//        // столбец для вывода объекта
+//        TableColumn<PanelWord, String> ObjColumn = new TableColumn<>("Объект");
+//        ObjColumn.setCellValueFactory(new PropertyValueFactory<>("text"));
+//        rightTable.getColumns().add(ObjColumn);
 
 
         // initialize() finish

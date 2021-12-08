@@ -59,6 +59,7 @@ public class Controller {
             if (!(file == null)) {
                 textReview1.setText(file.getAbsolutePath());
             }
+            buttonStart.setStyle("-fx-background-color: #00ff00"); // green
         });
         buttonReview2.setOnAction(event -> {
             final FileChooser fileChooser = new FileChooser();
@@ -82,7 +83,8 @@ public class Controller {
 
         buttonStart.setOnAction(event -> {
             Main.clearRowElementsToCleaning();
-            buttonStart.setStyle("-fx-background-color: #00ff00");
+
+            buttonStart.setStyle("-fx-background-color: #808080"); // gray
             String str1 = textReview1.getText();//pdf
             String str2 = textReview2.getText();//input
             String str3 = textReview3.getText();//output
@@ -95,10 +97,9 @@ public class Controller {
                 try {
 
                     Main.getBot().setNames(str1, str2, str3); // записали названия документов
-                    buttonStart.setStyle("-fx-background-color: #808080");
                     Main.getBot().AlWorkBot(); // запускаем обработку PDF
-                    buttonStart.setStyle("-fx-background-color: #00ff00");
                     System.out.println("Controller - processing stopped\n");
+
                 } catch (ParserConfigurationException e) {
                     //
                     e.printStackTrace();
