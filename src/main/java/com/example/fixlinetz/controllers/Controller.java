@@ -7,6 +7,7 @@ import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
 
 import com.example.fixlinetz.Main;
+import javafx.scene.control.Label;
 import org.xml.sax.SAXException;
 
 import javafx.fxml.FXML;
@@ -33,6 +34,10 @@ public class Controller {
     private Button buttonStart;
     @FXML
     private Button buttonClose;
+    @FXML
+    private Label calcLabel;
+
+    public Label getCalcLabel(){return calcLabel;}
 
     @FXML
     public void start() {
@@ -95,7 +100,6 @@ public class Controller {
                 System.out.println(str2);
                 System.out.println(str3);
                 try {
-
                     Main.getBot().setNames(str1, str2, str3); // записали названия документов
                     Main.getBot().AlWorkBot(); // запускаем обработку PDF
                     System.out.println("Controller - processing stopped\n");

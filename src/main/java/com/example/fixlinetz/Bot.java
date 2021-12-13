@@ -25,6 +25,7 @@ public class Bot {
     public static String NameFin;
     public DocumentPDF document;
 
+
     public Bot() {
         //
     }

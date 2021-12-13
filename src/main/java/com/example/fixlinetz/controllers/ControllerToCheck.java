@@ -1,11 +1,12 @@
 package com.example.fixlinetz.controllers;
 
+import com.example.fixlinetz.Bot;
 import com.example.fixlinetz.Main;
 import com.example.fixlinetz.classes.DocWord;
 import com.example.fixlinetz.classes.PanelWord;
+import com.example.fixlinetz.documents.DocumentEXCEL;
+import com.example.fixlinetz.documents.DocumentPDF;
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -14,6 +15,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTreeCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -26,7 +28,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Date;
 
 
 public class ControllerToCheck extends Application {
@@ -46,10 +48,17 @@ public class ControllerToCheck extends Application {
     private Button calcButton;
     @FXML
     private Button saveToExcelButton;
+    @FXML
+    private Label saveToExcelLabel1;
+    @FXML
+    private Label saveToExcelLabel2;
+    @FXML
+            private Text text;
 
 
     Stage stage;
-
+    DocWord[] mass;
+    public double totalResult[] = new double[4];
     private ObservableList<PanelWord> checkedArray = FXCollections.observableArrayList();
     CheckBoxTreeItem<PanelWord> leftViewRoot;
 
@@ -81,6 +90,8 @@ public class ControllerToCheck extends Application {
     @FXML
     public void initialize() {
         System.out.println("\"To check\" Scene initialized");
+        saveToExcelLabel1.setVisible(false);
+        saveToExcelLabel2.setVisible(false);
 
         /////////////////////////////////////////////////////////////////////////////////////////
         ////                    Собираем leftView для сырого массива
@@ -91,6 +102,10 @@ public class ControllerToCheck extends Application {
         CheckBoxTreeItem<PanelWord> root = new CheckBoxTreeItem<PanelWord>(pan);
         leftView.setRoot(root);
 
+
+        /////////////////////////////////////////////////////////////////////////////////////////
+        ////                    windToCheck panel EVENTS
+        /////////////////////////////////////////////////////////////////////////////////////////
         // обработчик выбранных элементов для добавления в массив
         root.addEventHandler(CheckBoxTreeItem.checkBoxSelectionChangedEvent(), (CheckBoxTreeItem.TreeModificationEvent<PanelWord> evt) -> {
             CheckBoxTreeItem<PanelWord> item = evt.getTreeItem();
@@ -110,7 +125,9 @@ public class ControllerToCheck extends Application {
             }
         });
 
-
+        /////////////////////////////////////////////////////////////////////////////////////////
+        ////                    windToCheck panel BUTTONS
+        /////////////////////////////////////////////////////////////////////////////////////////
         upperPaneButton1.setOnAction(event -> {
 
             if (leftViewRoot != null)
@@ -196,7 +213,7 @@ public class ControllerToCheck extends Application {
 
                 docElemNodes = docElem.getElementsByTagName("Word"); // получаем только типы (Word)
                 System.out.println("docElemNodes.getLength = " + docElemNodes.getLength());
-                DocWord[] mass = new DocWord[docElemNodes.getLength()];
+                mass = new DocWord[docElemNodes.getLength()];
 
                 for (i = 0; i < docElemNodes.getLength(); i++) {
                     Node node = docElemNodes.item(i);
@@ -285,7 +302,39 @@ public class ControllerToCheck extends Application {
             }
         });
 
+        saveToExcelButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                System.out.println(
+                        "        /////////////////////////////////////////////////////////////////////////////////////////////////////////\n" +
+                                "        //                    Здесь начинается вывод количества уникальных элементов в Excel\n" +
+                                "        /////////////////////////////////////////////////////////////////////////////////////////////////////////");
 
+                text.setText(new Date().toString());
+//                saveToExcelLabel1.setVisible(true);
+
+                DocumentEXCEL docEL = new DocumentEXCEL(DocumentPDF.getNameXLSX(), DocumentPDF.getNameEndXLSX());
+                for (int i = 0; i < mass.length; i++) { // проходимся по всем Word
+                    try {
+                        docEL.AccountEXCELL(i, mass[i].getWordName(), mass[i].getValue()); // пишем в Excel
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                try {
+                    docEL.UpFormula(totalResult);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    docEL.AdditionFinal(totalResult, Bot.NameTZ, Bot.NumTZ);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                text.setText(text.getText() + "\n" + new Date().toString());
+//                saveToExcelLabel2.setVisible(true);
+            }
+        });
 
 
         // initialize() finish
@@ -315,8 +364,8 @@ public class ControllerToCheck extends Application {
 
 // TODO: 02.12.2021 Нужно добавить отображение инфы во время обработки PDF+
 
-// TODO: 02.12.2021 Нужно добавить обработку другого файла без перекомпиляции
+// TODO: 02.12.2021 Нужно добавить перекидывание в эксельку+
 
-// TODO: 02.12.2021 Нужно добавить перекидывание в эксельку
+// TODO: 02.12.2021 Нужно добавить обработку другого файла без перекомпиляции
 
 // FIXME: 08-Dec-21 pattern matching

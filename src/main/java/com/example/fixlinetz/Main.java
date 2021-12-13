@@ -1,6 +1,7 @@
 package com.example.fixlinetz;
 
 
+import com.example.fixlinetz.controllers.Controller;
 import com.example.fixlinetz.controllers.ControllerToCheck;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -14,19 +15,20 @@ import java.util.ArrayList;
 public class Main extends Application {
     private static Bot bot = new Bot(); // бот для внешнего хранения вызова методов обработки для всех панелей
     private static ControllerToCheck toCheck = new ControllerToCheck(); // контроллер сцены toCheck
-    private static ArrayList<String> rowElementsToCleaning = new ArrayList<String>(); //пустой массив для строк, которые совпадают по паттерну
-
-    public static ArrayList<String> getRowElementsToCleaning(){return rowElementsToCleaning;}
-
-    public static void clearRowElementsToCleaning(){ rowElementsToCleaning.clear();};
-
+    private static Controller sampleContr = new Controller(); // контроллер сцены Sample
     public static ControllerToCheck getToCheck() {
         return toCheck;
     }
-
+    public static Controller getSampleContr() {
+        return sampleContr;
+    }
     public static Bot getBot() {
         return bot;
     }
+
+    private static ArrayList<String> rowElementsToCleaning = new ArrayList<String>(); //пустой массив для строк, которые совпадают по паттерну
+    public static ArrayList<String> getRowElementsToCleaning(){return rowElementsToCleaning;}
+    public static void clearRowElementsToCleaning(){ rowElementsToCleaning.clear();};
 
     @Override
     public void start(Stage primaryStage) {

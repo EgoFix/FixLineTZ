@@ -50,16 +50,23 @@
                                     <Font size="16.0" />
                                  </font>
                               </Button>
-                              <Button fx:id="saveToExcelButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="400.0" text="Сохранить в Excel" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                                 <font>
-                                    <Font size="16.0" />
-                                 </font>
-                              </Button>
                               <Button fx:id="calcButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="400.0" text="Подсчитать объекты" GridPane.columnIndex="1">
                                  <font>
                                     <Font size="16.0" />
                                  </font>
                               </Button>
+                              <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                 <children>
+                                    <Button fx:id="saveToExcelButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="400.0" text="Сохранить в Excel">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                    </Button>
+                                    <Label fx:id="saveToExcelLabel1" text="Инфа по сохранению в Excel" />
+                                    <Label fx:id="saveToExcelLabel2" text="Label" />
+                                    <Text fx:id="text" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+                                 </children>
+                              </VBox>
                            </children>
                         </GridPane>
                      </children>
