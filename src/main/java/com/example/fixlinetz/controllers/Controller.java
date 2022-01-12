@@ -7,12 +7,12 @@ import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
 
 import com.example.fixlinetz.Main;
-import javafx.scene.control.Label;
+import javafx.concurrent.Task;
+import javafx.scene.control.*;
+import javafx.scene.text.Text;
 import org.xml.sax.SAXException;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -36,8 +36,12 @@ public class Controller {
     private Button buttonClose;
     @FXML
     private Label calcLabel;
+    @FXML
+    private Text InsertDocPi;
 
-    public Label getCalcLabel(){return calcLabel;}
+    public Label getCalcLabel() {
+        return calcLabel;
+    }
 
     @FXML
     public void start() {
@@ -48,7 +52,7 @@ public class Controller {
     public void initialize() {
         buttonClose.setStyle("-fx-background-color: #B22222");
         buttonStart.setStyle("-fx-background-color: #00ff00");
-
+        InsertDocPi.visibleProperty().setValue(false); // видимость состояния работы "готово"
         System.out.println("\"Main window\" Scene initialized");
 
         buttonClose.setOnAction(event -> {
@@ -84,8 +88,6 @@ public class Controller {
                 textReview3.setText(file.getAbsolutePath());
             }
         });
-
-
         buttonStart.setOnAction(event -> {
             Main.clearRowElementsToCleaning();
 
@@ -99,21 +101,23 @@ public class Controller {
                 System.out.println(str1);
                 System.out.println(str2);
                 System.out.println(str3);
-                try {
-                    Main.getBot().setNames(str1, str2, str3); // записали названия документов
-                    Main.getBot().AlWorkBot(); // запускаем обработку PDF
-                    System.out.println("Controller - processing stopped\n");
+                Main.getBot().setNames(str1, str2, str3); // записали названия документов
 
-                } catch (ParserConfigurationException e) {
-                    //
-                    e.printStackTrace();
-                } catch (SAXException e) {
-                    //
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    //
-                    e.printStackTrace();
-                }
+                final Task AlWorkBotTask;
+                AlWorkBotTask = new Task() { // задача для выполнения потоком
+                    @Override
+                    protected Object call() throws Exception {
+                        Main.getBot().AlWorkBot(); // запускаем обработку PDF
+                        InsertDocPi.visibleProperty().setValue(true); // видимость состояния работы "готово"
+                        return null;
+                    }
+                };
+                Thread AlWorkBotThread = new Thread(AlWorkBotTask); // инициализация потока
+                AlWorkBotThread.setDaemon(true); // установка приоритета
+                AlWorkBotThread.start(); // запуск потока
+
+                System.out.println("Controller - processing stopped\n");
+
             }
         });
     }

@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 
 public class Main extends Application {
-    private static Bot bot = new Bot(); // бот для внешнего хранения вызова методов обработки для всех панелей
+    private static Bot bot = new Bot(); // бот для внешнего хранения, вызова методов обработки для всех панелей
     private static ControllerToCheck toCheck = new ControllerToCheck(); // контроллер сцены toCheck
     private static Controller sampleContr = new Controller(); // контроллер сцены Sample
     public static ControllerToCheck getToCheck() {

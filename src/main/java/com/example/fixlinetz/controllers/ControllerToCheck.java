@@ -1,15 +1,18 @@
 package com.example.fixlinetz.controllers;
 
-import com.example.fixlinetz.Bot;
 import com.example.fixlinetz.Main;
 import com.example.fixlinetz.classes.DocWord;
 import com.example.fixlinetz.classes.PanelWord;
+import com.example.fixlinetz.classes.ToExcelSaver;
 import com.example.fixlinetz.documents.DocumentEXCEL;
 import com.example.fixlinetz.documents.DocumentPDF;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTreeCell;
@@ -28,7 +31,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
-import java.util.Date;
 
 
 public class ControllerToCheck extends Application {
@@ -37,30 +39,35 @@ public class ControllerToCheck extends Application {
     ////                    Объекты wind_to_check
     /////////////////////////////////////////////////////////////////////////////////////////
     @FXML
-    private TreeView<PanelWord> leftView;
+    private Button upperPaneButton1; // кнопка верхней панели
     @FXML
-    private TableView rightTable;
+    private TreeView<PanelWord> leftView; // левая таблица
     @FXML
-    private Button upperPaneButton1;
+    private Button ButtonToCheck; // кнопка для отметки выделенных объектов
     @FXML
-    private Button transferButton;
+    private TableView rightTable; // правая таблица
     @FXML
-    private Button calcButton;
+    private Button transferButton; // перенос элементов
     @FXML
-    private Button saveToExcelButton;
+    private Button calcButton; // подсчет элементов
     @FXML
-    private Label saveToExcelLabel1;
+    private Button saveToExcelButton; // сохрание в эксельке
     @FXML
-    private Label saveToExcelLabel2;
+    private Label saveToExcelLabel1; // инфа по обработке эксельки
     @FXML
-            private Text text;
+    private Text ToExcelText; // время обработки эксельки
+    @FXML
+    private ProgressBar toExcelPb; // прогресс бар обработки эксельки
 
 
-    Stage stage;
-    DocWord[] mass;
+    Stage stage; // сцена панели
+    DocWord[] mass; // массив элементов из словаря
     public double totalResult[] = new double[4];
     private ObservableList<PanelWord> checkedArray = FXCollections.observableArrayList();
-    CheckBoxTreeItem<PanelWord> leftViewRoot;
+    CheckBoxTreeItem<PanelWord> leftViewRoot; // рут элемент левой таблицы
+    DocumentEXCEL docEL = new DocumentEXCEL(DocumentPDF.getNameXLSX(), DocumentPDF.getNameEndXLSX());
+    ToExcelSaver toExcelSaver; // экземпляр класса-сохранителя данных в эксель
+    PanelWord[] leftViewTempMass; // массив элементов, которые пользователь выделяет в левой таблице для их отметки галочкой
 
     /////////////////////////////////////////////////////////////////////////////////////////
     ////                    Методы wind_to_check
@@ -81,32 +88,32 @@ public class ControllerToCheck extends Application {
         return upperPaneButton1;
     }
 
+
     @Override
     public void start(Stage stageToCheck) throws Exception {
         System.out.println("\"To check\" Scene started");
-        upperPaneButton1.setStyle("-fx-background-color: #808080");
     }
+
 
     @FXML
     public void initialize() {
         System.out.println("\"To check\" Scene initialized");
-        saveToExcelLabel1.setVisible(false);
-        saveToExcelLabel2.setVisible(false);
 
         /////////////////////////////////////////////////////////////////////////////////////////
         ////                    Собираем leftView для сырого массива
         /////////////////////////////////////////////////////////////////////////////////////////
         // устанавливаем рут
-        PanelWord pan = new PanelWord("№ ", " Объект");
-        leftView.setCellFactory(CheckBoxTreeCell.<PanelWord>forTreeView());
-        CheckBoxTreeItem<PanelWord> root = new CheckBoxTreeItem<PanelWord>(pan);
-        leftView.setRoot(root);
+        PanelWord pan = new PanelWord("№ ", " Объект"); // худ левой таблицы
+        leftView.setCellFactory(CheckBoxTreeCell.<PanelWord>forTreeView()); // тип ячейки checkBox
+        CheckBoxTreeItem<PanelWord> root = new CheckBoxTreeItem<PanelWord>(pan); // вписываем в рут элемент худ
+        leftView.setRoot(root); // устанавливаем рут
 
 
         /////////////////////////////////////////////////////////////////////////////////////////
         ////                    windToCheck panel EVENTS
         /////////////////////////////////////////////////////////////////////////////////////////
         // обработчик выбранных элементов для добавления в массив
+        // добавление в checkedArray выделенных галочкой объектов
         root.addEventHandler(CheckBoxTreeItem.checkBoxSelectionChangedEvent(), (CheckBoxTreeItem.TreeModificationEvent<PanelWord> evt) -> {
             CheckBoxTreeItem<PanelWord> item = evt.getTreeItem();
 
@@ -128,13 +135,11 @@ public class ControllerToCheck extends Application {
         /////////////////////////////////////////////////////////////////////////////////////////
         ////                    windToCheck panel BUTTONS
         /////////////////////////////////////////////////////////////////////////////////////////
+        // добавляем в левую таблицу значения элементов, которые удовлетворяют маске
         upperPaneButton1.setOnAction(event -> {
-
             if (leftViewRoot != null)
                 leftViewRoot.getChildren().clear();
-
             System.out.println("upperPaneButton1");
-
             try {
                 Main.getBot().document.SearchTOCheck(Main.getBot().PDFList, Main.getBot().count);
             } catch (ParserConfigurationException e) {
@@ -149,11 +154,10 @@ public class ControllerToCheck extends Application {
             }
         });
 
-        transferButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
 
+        transferButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-
 
                 /////////////////////////////////////////////////////////////////////////////////////////
                 ////                    Собираем rightTable из выборки пользователя
@@ -162,9 +166,9 @@ public class ControllerToCheck extends Application {
                 rightTable.getColumns().clear(); // чистим столбцы
                 // столбец для вывода номера
                 TableColumn<PanelWord, String> numColumn = new TableColumn<>("№");
-
                 numColumn.setCellValueFactory(new PropertyValueFactory<>("num"));
                 rightTable.getColumns().add(numColumn);
+
                 // столбец для вывода объекта
                 TableColumn<PanelWord, String> ObjColumn = new TableColumn<>("Объект");
                 ObjColumn.setCellValueFactory(new PropertyValueFactory<>("text"));
@@ -178,9 +182,10 @@ public class ControllerToCheck extends Application {
                     temp.add(num, tempItem);
                     num++;
                 }
-                rightTable.setItems(temp);
+                rightTable.setItems(temp); // добавляем элементы в правую таблицу из temp
             }
         });
+
 
         calcButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
@@ -302,6 +307,7 @@ public class ControllerToCheck extends Application {
             }
         });
 
+
         saveToExcelButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
@@ -309,34 +315,62 @@ public class ControllerToCheck extends Application {
                         "        /////////////////////////////////////////////////////////////////////////////////////////////////////////\n" +
                                 "        //                    Здесь начинается вывод количества уникальных элементов в Excel\n" +
                                 "        /////////////////////////////////////////////////////////////////////////////////////////////////////////");
+//                ToExcelText.setText(ToExcelText.getText() + "\n" + new Date());
+                if (toExcelSaver != null && toExcelSaver.isRunning()) {
+                    toExcelSaver.cancel();
+                }
 
-                text.setText(new Date().toString());
-//                saveToExcelLabel1.setVisible(true);
+                toExcelSaver = new ToExcelSaver(DocumentPDF.getNameXLSX(), DocumentPDF.getNameEndXLSX(), mass);
+                Thread thread = new Thread(toExcelSaver);
+                thread.setDaemon(true);
+                thread.start();
 
-                DocumentEXCEL docEL = new DocumentEXCEL(DocumentPDF.getNameXLSX(), DocumentPDF.getNameEndXLSX());
-                for (int i = 0; i < mass.length; i++) { // проходимся по всем Word
-                    try {
-                        docEL.AccountEXCELL(i, mass[i].getWordName(), mass[i].getValue()); // пишем в Excel
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                try {
-                    docEL.UpFormula(totalResult);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    docEL.AdditionFinal(totalResult, Bot.NameTZ, Bot.NumTZ);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                text.setText(text.getText() + "\n" + new Date().toString());
-//                saveToExcelLabel2.setVisible(true);
+                toExcelPb.progressProperty().bind(toExcelSaver.progressProperty());
+                saveToExcelButton.disableProperty().bind(toExcelSaver.runningProperty());
+//                ToExcelText.setText(ToExcelText.getText() + "\n" + new Date());
             }
         });
 
+        rightTable.setRowFactory( tv -> {
+            TableRow<DocWord> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
+                    DocWord rowData = row.getItem();
+                    System.out.println(rowData);
+                }
+            });
+            return row ;
+        });
 
+        MultipleSelectionModel<TreeItem<PanelWord>> leftViewSelectionModel = leftView.getSelectionModel();
+        leftViewSelectionModel.setSelectionMode(SelectionMode.MULTIPLE);
+        // устанавливаем слушатель для отслеживания изменений
+        leftViewSelectionModel.selectedItemProperty().addListener(new ChangeListener<TreeItem<PanelWord>>(){
+
+            @Override
+            public void changed(ObservableValue<? extends TreeItem<PanelWord>> observableValue, TreeItem<PanelWord> panelWordTreeItem, TreeItem<PanelWord> t1) {
+                String selectedItems = "";
+                int counter = 0;
+                ObservableList<TreeItem<PanelWord>> selected = leftViewSelectionModel.getSelectedItems();
+                for (TreeItem<PanelWord> item : selected){
+                    selectedItems += item + " ";
+                    counter++;
+                }
+//                leftViewTempMass = new PanelWord[counter];
+//                for(int i = 0; i < counter; i++){
+//                    leftViewTempMass[i].setNum();
+//                }
+                System.out.println("Selected: " + selectedItems);
+            }
+
+        });
+
+        ButtonToCheck.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                // выделенные добавить в массив, нажать на кнопку, проставить галочки всем, очистить массив
+            }
+        });
         // initialize() finish
     }
 
@@ -349,6 +383,8 @@ public class ControllerToCheck extends Application {
         leftView.getRoot().getChildren().add(treeItem);
 
     }
+
+
 
     public static void main(String[] args) {
         launch(args);
@@ -364,8 +400,18 @@ public class ControllerToCheck extends Application {
 
 // TODO: 02.12.2021 Нужно добавить отображение инфы во время обработки PDF+
 
-// TODO: 02.12.2021 Нужно добавить перекидывание в эксельку+
+// TODO: 02.12.2021 Нужно добавить перекидывание в эксельку+  //перенесено на доп поток
 
 // TODO: 02.12.2021 Нужно добавить обработку другого файла без перекомпиляции
+
+// TODO: 10.01.2022 Нужно сформировать задачу в класс и поместить экземпляр класса в отдельный поток  !!!
+
+// TODO: 12.01.2022 Нужно добавить отображение элементов, входящих в правую таблицу при нажатии на строку
+//  и возможность удалить выбранный элемент
+
+// TODO: 12.01.2022 Добавить многострочное выделение
+//  - отдельно добавляются через галочку ( основной массив )
+//  - дополнительно добавляются через кнопку ( среди тех, что выделены )
+//  - если есть повторяющиеся значения по полю value, то игнорировать добавление в основной массив
 
 // FIXME: 08-Dec-21 pattern matching
