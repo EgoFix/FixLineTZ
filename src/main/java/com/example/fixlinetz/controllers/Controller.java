@@ -2,15 +2,11 @@ package com.example.fixlinetz.controllers;
 
 
 import java.io.File;
-import java.io.IOException;
-
-import javax.xml.parsers.ParserConfigurationException;
 
 import com.example.fixlinetz.Main;
 import javafx.concurrent.Task;
 import javafx.scene.control.*;
 import javafx.scene.text.Text;
-import org.xml.sax.SAXException;
 
 import javafx.fxml.FXML;
 import javafx.stage.FileChooser;
@@ -35,13 +31,8 @@ public class Controller {
     @FXML
     private Button buttonClose;
     @FXML
-    private Label calcLabel;
-    @FXML
     private Text InsertDocPi;
 
-    public Label getCalcLabel() {
-        return calcLabel;
-    }
 
     @FXML
     public void start() {
@@ -96,7 +87,7 @@ public class Controller {
             String str2 = textReview2.getText();//input
             String str3 = textReview3.getText();//output
             if ((str1 == null) || (str2 == null) || (str3 == null)) {
-                System.out.println("FISOIDOSIDps");
+                System.out.println("Start WORK");
             } else {
                 System.out.println(str1);
                 System.out.println(str2);

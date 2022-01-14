@@ -62,9 +62,15 @@
                                           <Font size="16.0" />
                                        </font>
                                     </Button>
-                                    <Label fx:id="saveToExcelLabel1" text="Инфа по сохранению в Excel" />
+                                    <Label fx:id="saveToExcelLabel1" text="Инфа по сохранению в Excel" textFill="WHITE">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font></Label>
                                     <ProgressBar fx:id="toExcelPb" prefWidth="200.0" progress="0.0" />
-                                    <Text fx:id="ToExcelText" strokeType="OUTSIDE" strokeWidth="0.0" />
+                                    <Text fx:id="toExcelText" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Готово">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font></Text>
                                  </children>
                               </VBox>
                            </children>
